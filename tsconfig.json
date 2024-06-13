@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "outDir": "dist",
+    "noImplicitAny": true,
+    "types": ["cors"]
+  },
+  "include": ["src/**/*", "index.ts"]
+}
