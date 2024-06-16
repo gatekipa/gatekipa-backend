@@ -3,16 +3,15 @@ import "express-async-errors";
 import { json } from "body-parser";
 import cookieSession from "cookie-session";
 
-import { signinRouter } from "./routes/webuser/auth/signin";
-import { signoutRouter } from "./routes/webuser/auth/signout";
-import { signupRouter } from "./routes/webuser/auth/signup";
-import { changePasswordRouter } from "./routes/webuser/auth/change-password";
+import { signinRouter } from "./routes/auth/signin";
+import { signoutRouter } from "./routes/auth/signout";
+import { signupRouter } from "./routes/auth/signup";
+import { changePasswordRouter } from "./routes/auth/change-password";
 import globalErrorMiddleware from "./middlewares/global-error-middleware";
-import { forgotPasswordRouter } from "./routes/webuser/auth/forgot-password";
-import { verifyForgotPasswordTokenRouter } from "./routes/webuser/auth/verify-forgot-pass-token";
-import { newPasswordRouter } from "./routes/webuser/auth/new-password";
+import { forgotPasswordRouter } from "./routes/auth/forgot-password";
+import { verifyForgotPasswordTokenRouter } from "./routes/auth/verify-forgot-pass-token";
+import { newPasswordRouter } from "./routes/auth/new-password";
 import cors, { CorsOptions } from "cors";
-import { todoListRouter } from "./routes/webuser/todo/list";
 
 const dotenv = require("dotenv").config();
 
@@ -41,14 +40,13 @@ app.options("*", cors(corsOptions));
 app.use(signupRouter);
 app.use(signinRouter);
 app.use(changePasswordRouter);
-app.use(todoListRouter);
 app.use(signoutRouter);
 app.use(forgotPasswordRouter);
 app.use(verifyForgotPasswordTokenRouter);
 app.use(newPasswordRouter);
 
 app.use("/", async (req, res) => {
-  res.send("Auth API Working...");
+  res.send("GateKipa backend working...");
 });
 
 app.all("*", async (req, res, next) => {

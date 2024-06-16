@@ -1,12 +1,18 @@
 import mongoose from "mongoose";
 
+const userTypeValue = ["visitor", "employee", "admin"];
 interface IAppUser {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   emailAddress: string;
+  mobileNo: string;
   isActive: boolean;
   isLoggedIn: boolean;
-  role: string;
+  userType: string;
   password: string;
+  employeeId?: string;
+  companyId: string;
+  visitorId?: string;
 }
 
 const appUserSchema = new mongoose.Schema(
@@ -19,7 +25,15 @@ const appUserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    fullName: {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    mobileNo: {
       type: String,
       required: true,
     },
@@ -31,9 +45,25 @@ const appUserSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    role: {
+    userType: {
       type: String,
+      enum: userTypeValue,
       required: true,
+    },
+    employeeId: {
+      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "employee",
+    },
+    companyId: {
+      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "company",
+    },
+    visitorId: {
+      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "visitor",
     },
   },
   {

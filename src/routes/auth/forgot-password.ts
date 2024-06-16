@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
-import { AppUser } from "../../../models/AppUser";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
-import { generateRandom6DigitNumber } from "../../../services/util";
-import { UserTempToken } from "../../../models/UserTempToken";
-import { EventType } from "../../../common/enums";
-import { sendEmail } from "../../../services/mailer";
+import { AppUser } from "../../models/AppUser";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { generateRandom6DigitNumber } from "../../services/util";
+import { UserTempToken } from "../../models/UserTempToken";
+import { EventType } from "../../common/enums";
+import { sendEmail } from "../../services/mailer";
 
 const router = express.Router();
 

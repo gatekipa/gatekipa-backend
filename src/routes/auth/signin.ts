@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { AppUser } from "../../../models/AppUser";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
-import { Password } from "../../../services/password";
+import { AppUser } from "../../models/AppUser";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { Password } from "../../services/password";
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
@@ -58,9 +58,9 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     // * Generate a JWT Token for User
     const token = jwt.sign(
       {
-        fullName: existingUser[0].fullName,
+        fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
         emailAddress,
-        role: existingUser[0].role,
+        userType: existingUser[0].userType,
       },
       process.env.JWT_KEY
     );
@@ -74,8 +74,8 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       `User logged in successfully`,
       {
         emailAddress,
-        fullName: existingUser[0].fullName,
-        role: existingUser[0].role,
+        fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
+        userType: existingUser[0].userType,
       },
       200
     );

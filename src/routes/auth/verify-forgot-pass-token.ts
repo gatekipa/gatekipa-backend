@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
-import { UserTempToken } from "../../../models/UserTempToken";
-import { EventType } from "../../../common/enums";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { UserTempToken } from "../../models/UserTempToken";
+import { EventType } from "../../common/enums";
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 {
-  "name": "authentication-api",
+  "name": "gatekipa-backend",
   "version": "1.0.0",
-  "description": "authentication-api project.",
+  "description": "Gatekipa application backend code",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",

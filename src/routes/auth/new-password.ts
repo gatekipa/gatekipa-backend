@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
-import { UserTempToken } from "../../../models/UserTempToken";
-import { EventType } from "../../../common/enums";
-import { AppUser } from "../../../models/AppUser";
-import { Password } from "../../../services/password";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { UserTempToken } from "../../models/UserTempToken";
+import { EventType } from "../../common/enums";
+import { AppUser } from "../../models/AppUser";
+import { Password } from "../../services/password";
 
 const router = express.Router();
 

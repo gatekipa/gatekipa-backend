@@ -1,8 +1,8 @@
-import { ApiResponseDto } from "../../../dto/api-response.dto";
+import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
-import { requireAuth } from "../../../middlewares/require-auth.middleware";
-import { AppUser } from "../../../models/AppUser";
-import { Password } from "../../../services/password";
+import { requireAuth } from "../../middlewares/require-auth.middleware";
+import { AppUser } from "../../models/AppUser";
+import { Password } from "../../services/password";
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { AppUser } from "../../../models/AppUser";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
-import { Password } from "../../../services/password";
-import { ROLES } from "../../../common/enums";
+import { AppUser } from "../../models/AppUser";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { Password } from "../../services/password";
+import { ROLES } from "../../common/enums";
 import jwt from "jsonwebtoken";
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
     const response = new ApiResponseDto(
       false,
       `User sign up successfully!`,
-      { emailAddress, fullName, role: newUser.role },
+      { emailAddress, fullName, userType: newUser.userType },
       201
     );
     res.status(201).send(response);

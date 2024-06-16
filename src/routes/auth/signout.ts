@@ -1,7 +1,7 @@
-import { AppUser } from "../../../models/AppUser";
-import { ApiResponseDto } from "../../../dto/api-response.dto";
+import { AppUser } from "../../models/AppUser";
+import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
-import { requireAuth } from "../../../middlewares/require-auth.middleware";
+import { requireAuth } from "../../middlewares/require-auth.middleware";
 
 const router = express.Router();
 

@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { app } from "./src/app";
+
+const PORT = 3001;
 const start = async () => {
   //Test comment
   if (!process.env.JWT_KEY) {
@@ -11,13 +13,13 @@ const start = async () => {
 
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connected to MongoDB");
+    console.log("Connected to database successfully!");
   } catch (err) {
     console.log(err);
   }
 
-  app.listen(3001, () => {
-    console.log("authentication-api Listening on 3001!");
+  app.listen(PORT, () => {
+    console.log(`Gatekipa backend listening on ${PORT}!`);
   });
 };
 
