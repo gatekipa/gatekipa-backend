@@ -66,6 +66,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     );
 
     req.session.jwt = token;
+
     // * ===========================
 
     // * If password is correct, login user.
@@ -74,7 +75,8 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       `User logged in successfully`,
       {
         emailAddress,
-        fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
+        firstName: existingUser[0].firstName,
+        lastName: existingUser[0].lastName,
         userType: existingUser[0].userType,
       },
       200

@@ -36,6 +36,8 @@ router.post(
       const expiryDate = new Date();
       expiryDate.setHours(new Date().getHours() + 1);
 
+      console.log("newToken :>> ", newToken);
+
       await UserTempToken.create({
         domain: emailAddress,
         eventType: EventType.FORGOT_PASSWORD,

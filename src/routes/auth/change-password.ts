@@ -14,6 +14,9 @@ router.post(
       const { emailAddress } = req.session?.user;
       const { newPassword } = req.body;
 
+      console.log(`emailAddress`, emailAddress);
+      console.log(`newPassword `, newPassword);
+
       // * Fetch user from database for email address.
       const existingUser = await AppUser.find({
         emailAddress,

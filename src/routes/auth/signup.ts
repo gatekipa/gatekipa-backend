@@ -8,8 +8,17 @@ const router = express.Router();
 
 router.post("/api/users/signup", async (req: Request, res: Response) => {
   try {
-    const { emailAddress, password, fullName } = req.body;
-
+    const {
+      emailAddress,
+      password,
+      firstName,
+      lastName,
+      mobileNo,
+      companyId,
+      userType,
+    } = req.body;
+    const users = await AppUser.find();
+    console.log("users :>> ", users);
     // * Check if user already exist.
     const existingUser = await AppUser.find({ emailAddress });
 
@@ -26,14 +35,18 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       password: hashedPassword,
       isActive: true,
       isLoggedIn: false,
-      role: ROLES.NORMAL,
-      fullName,
+      userType: "employee",
+      firstName,
+      lastName,
+      mobileNo,
+      companyId: "667593f1f13d2e6a300b0c62",
     });
 
     // * Generate a JWT Token for User
     const token = jwt.sign(
       {
-        fullName,
+        firstName,
+        lastName,
         emailAddress,
         role: ROLES.NORMAL,
       },
@@ -46,7 +59,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
     const response = new ApiResponseDto(
       false,
       `User sign up successfully!`,
-      { emailAddress, fullName, userType: newUser.userType },
+      { emailAddress, firstName, lastName, userType: newUser.userType },
       201
     );
     res.status(201).send(response);

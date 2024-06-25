@@ -10,28 +10,33 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       // * Get emailAddress from body
-      const { emailAddress, token } = req.body;
+      const { tempTokenId, token } = req.body;
 
-      const userTempToken = await UserTempToken.find({
-        domain: emailAddress,
-        isVerified: false,
-        eventType: EventType.FORGOT_PASSWORD,
-      });
+      console.log("id :>> ", tempTokenId);
 
-      if (userTempToken && userTempToken.length === 0) {
+      // const userTempToken = await UserTempToken.findOne({
+      //   _id: id,
+      //   isVerified: false,
+      //   eventType: EventType.FORGOT_PASSWORD,
+      // });
+      const userTempToken = await UserTempToken.findById(tempTokenId);
+
+      console.log("userTempToken :>> ", userTempToken);
+
+      if (!userTempToken) {
         return res
           .status(400)
           .send(
             new ApiResponseDto(
               true,
-              `No generated token entry found for email ${emailAddress}`,
+              `No generated token entry found for email ${userTempToken.domain}`,
               [],
               400
             )
           );
       }
 
-      if (userTempToken[0].token !== token) {
+      if (userTempToken.token !== token) {
         return res
           .status(400)
           .send(
@@ -45,8 +50,8 @@ router.post(
       }
 
       // * Updating the table that token has been verified.
-      await UserTempToken.updateOne(
-        { _id: userTempToken[0]._id },
+      const updatedUserTempToken = await UserTempToken.updateOne(
+        { _id: userTempToken._id },
         { isVerified: true },
         { new: true }
       );
@@ -54,9 +59,15 @@ router.post(
       return res
         .status(200)
         .send(
-          new ApiResponseDto(false, `Token verified successfully`, [], 200)
+          new ApiResponseDto(
+            false,
+            `Token verified successfully`,
+            userTempToken,
+            200
+          )
         );
     } catch (error) {
+      console.log("error :>> ", error);
       console.error("Error occurred in verify-forgot-pass-token", error);
       res.status(500).send(new ApiResponseDto(true, error.message, [], 500));
     }

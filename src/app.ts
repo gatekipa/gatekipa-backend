@@ -12,6 +12,7 @@ import { forgotPasswordRouter } from "./routes/auth/forgot-password";
 import { verifyForgotPasswordTokenRouter } from "./routes/auth/verify-forgot-pass-token";
 import { newPasswordRouter } from "./routes/auth/new-password";
 import cors, { CorsOptions } from "cors";
+import { Company } from "./models/Company";
 
 const dotenv = require("dotenv").config();
 
@@ -28,7 +29,7 @@ app.use(
 );
 
 const corsOptions: CorsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://localhost:5173",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   exposedHeaders: ["Set-Cookie"],
@@ -36,6 +37,20 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
+app.get(`/company`, async (req, res) => {
+  const companies = await Company.find();
+  res.status(200).json(companies);
+});
+app.post(`/company`, (req, res) => {
+  const company = new Company({
+    ...req.body,
+    nextPaymentDate: new Date(),
+    lastPaymentDate: new Date(),
+  });
+  company.save();
+  res.status(201).send(company);
+});
 
 app.use(signupRouter);
 app.use(signinRouter);
