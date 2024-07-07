@@ -10,16 +10,19 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       // * Get emailAddress from body
-      const { tempTokenId, token } = req.body;
-
-      console.log("id :>> ", tempTokenId);
+      const { token, email } = req.body;
 
       // const userTempToken = await UserTempToken.findOne({
       //   _id: id,
       //   isVerified: false,
       //   eventType: EventType.FORGOT_PASSWORD,
       // });
-      const userTempToken = await UserTempToken.findById(tempTokenId);
+      const userTempToken = await UserTempToken.findOne({
+        isVerified: false,
+        domain: email,
+        token: token,
+        eventType: EventType.FORGOT_PASSWORD,
+      });
 
       console.log("userTempToken :>> ", userTempToken);
 
