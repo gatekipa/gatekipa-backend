@@ -13,6 +13,7 @@ import { verifyForgotPasswordTokenRouter } from "./routes/auth/verify-forgot-pas
 import { newPasswordRouter } from "./routes/auth/new-password";
 import cors, { CorsOptions } from "cors";
 import { Company } from "./models/Company";
+import { sendEmail } from "services/mailer";
 
 const dotenv = require("dotenv").config();
 
@@ -29,7 +30,7 @@ app.use(
 );
 
 const corsOptions: CorsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.ALLOWED_FRONTEND_ORIGIN,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   exposedHeaders: ["Set-Cookie"],
@@ -61,7 +62,7 @@ app.use(verifyForgotPasswordTokenRouter);
 app.use(newPasswordRouter);
 
 app.use("/", async (req, res) => {
-  res.send("GateKipa backend working...");
+  res.send("GateKipa backend responding...");
 });
 
 app.all("*", async (req, res, next) => {

@@ -46,11 +46,10 @@ router.post(
         token: newToken,
       });
 
-      // * Send token on email
       await sendEmail(
         emailAddress,
         "Forgot Password - Email Verification",
-        `Your verification code is ${newToken}`
+        `<h1>Your verification code is ${newToken}</h1>`
       );
 
       return res

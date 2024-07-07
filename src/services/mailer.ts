@@ -1,29 +1,29 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 export async function sendEmail(
   toEmail: string,
   subject: string,
-  html: string
+  htmlContent: string
 ) {
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: process.env.FROM_EMAIL,
-      pass: process.env.FROM_EMAIL_PASS,
-    },
-  });
+  sgMail.setApiKey(process.env.SEND_GRID_API_KEY || "");
 
-  const mailOptions = {
-    from: process.env.FROM_EMAIL_ADDRESS,
+  const msg = {
     to: toEmail,
+    from: process.env.SENDER_IDENTITY_EMAIL || "",
     subject: subject,
-    text: html,
+    html: htmlContent,
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent successfully to: ${toEmail}`, info);
+    await sgMail.send({
+      from: { email: process.env.SENDER_IDENTITY_EMAIL, name: "GateKipa" },
+      ...msg,
+    });
+    console.log(`Email sent successfully to: ${toEmail}`);
   } catch (error) {
-    console.error(`Error while sending email to ${mailOptions.to}`, error);
+    console.error(`Error while sending email to ${toEmail}`, error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
   }
 }
