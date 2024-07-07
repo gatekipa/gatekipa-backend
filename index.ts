@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { app } from "./app";
+import { app } from "./src/app";
 
 const PORT = 3001;
 const start = async () => {

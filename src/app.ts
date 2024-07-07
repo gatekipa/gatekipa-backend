@@ -13,7 +13,6 @@ import { verifyForgotPasswordTokenRouter } from "./routes/auth/verify-forgot-pas
 import { newPasswordRouter } from "./routes/auth/new-password";
 import cors, { CorsOptions } from "cors";
 import { Company } from "./models/Company";
-import { sendEmail } from "services/mailer";
 
 const dotenv = require("dotenv").config();
 
@@ -25,7 +24,7 @@ app.use(
   cookieSession({
     signed: false,
     secure: process.env.NODE_ENV !== "development",
-    name: "auth-app-session",
+    name: "gatekipa-app-session",
   })
 );
 
