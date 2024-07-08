@@ -24,7 +24,13 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
 
     // * If user already exists, throw error.
     if (existingUser && existingUser.length > 0) {
-      throw new Error(`User already exists with email: ${emailAddress}`);
+      const response = new ApiResponseDto(
+        true,
+        `User already exists with email: ${emailAddress}`,
+        [],
+        400
+      );
+      return res.status(400).send(response);
     }
 
     const hashedPassword = await Password.toHash(password);
