@@ -4,8 +4,8 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import { Password } from "../../services/password";
 import { UserType } from "../../common/enums";
 import jwt from "jsonwebtoken";
-import { Employee } from "models/Employee";
-import { Visitor } from "models/Visitor";
+import { Employee } from "../../models/Employee";
+import { Visitor } from "../../models/Visitor";
 const router = express.Router();
 
 router.post("/api/users/signup", async (req: Request, res: Response) => {
