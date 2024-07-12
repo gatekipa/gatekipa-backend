@@ -43,6 +43,10 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
+app.get(`/`, async (req, res) => {
+  res.status(200).send("Gatekipa Backend API");
+});
+
 app.get(`/company`, async (req, res) => {
   const companies = await Company.find();
   res.status(200).json(companies);
