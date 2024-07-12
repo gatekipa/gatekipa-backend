@@ -43,10 +43,6 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-app.get(`/`, async (req, res) => {
-  res.status(200).send("Gatekipa Backend API");
-});
-
 app.get(`/company`, async (req, res) => {
   const companies = await Company.find();
   res.status(200).json(companies);
@@ -75,6 +71,10 @@ app.use(listVisitsRouter);
 app.use(createVisitRouter);
 app.use(checkInVisitRouter);
 app.use(checkOutVisitRouter);
+
+app.use("/", async (req, res) => {
+  res.send("GateKipa Backend API");
+});
 
 app.all("*", async (req, res, next) => {
   throw new Error("Route not found");
