@@ -16,7 +16,7 @@ export const requireAuth = (
     }
     req.session.user = payload;
   } catch (error) {
-    //console.error("Error Occurred in require-auth middleware", error);
+    console.error("Error Occurred in require-auth middleware", error);
     return res
       .status(401)
       .send(new ApiResponseDto(true, "Unauthorized Access", [], 401));

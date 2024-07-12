@@ -1,27 +1,18 @@
 import mongoose from "mongoose";
 
-const userTypeValue = ["VISITOR", "EMPLOYEE", "ADMIN"];
-interface IAppUser {
+interface IEmployee {
   firstName: string;
   lastName: string;
   emailAddress: string;
   mobileNo: string;
   isActive: boolean;
-  isLoggedIn: boolean;
-  userType: string;
-  password: string;
-  employeeId?: string;
   companyId: string;
-  visitorId?: string;
+  createdBy: string;
 }
 
-const appUserSchema = new mongoose.Schema(
+const employeeSchema = new mongoose.Schema(
   {
     emailAddress: {
-      type: String,
-      required: true,
-    },
-    password: {
       type: String,
       required: true,
     },
@@ -33,37 +24,40 @@ const appUserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    dateOfBirth: {
+      type: Date,
+      required: true,
+    },
+    employeeNo: {
+      type: String,
+      required: true,
+    },
     mobileNo: {
       type: String,
       required: true,
     },
-    isLoggedIn: {
-      type: Boolean,
+    designation: {
+      type: String,
       required: true,
     },
     isActive: {
       type: Boolean,
       required: true,
     },
-    userType: {
-      type: String,
-      enum: userTypeValue,
+    shiftId: {
       required: true,
-    },
-    employeeId: {
-      required: false,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "employee",
+      ref: "shift",
     },
     companyId: {
       required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "company",
     },
-    visitorId: {
-      required: false,
+    createdBy: {
+      required: true,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "visitor",
+      ref: "appUser",
     },
   },
   {
@@ -72,13 +66,16 @@ const appUserSchema = new mongoose.Schema(
       transform(doc: any, ret: any) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.password;
         delete ret.__v;
       },
     },
   }
 );
 
-const AppUser = mongoose.model<IAppUser>("appUser", appUserSchema, "appUser");
+const Employee = mongoose.model<IEmployee>(
+  "employee",
+  employeeSchema,
+  "employee"
+);
 
-export { AppUser };
+export { Employee };

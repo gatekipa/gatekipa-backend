@@ -14,9 +14,6 @@ router.post(
       const { emailAddress } = req.session?.user;
       const { newPassword } = req.body;
 
-      console.log(`emailAddress`, emailAddress);
-      console.log(`newPassword `, newPassword);
-
       // * Fetch user from database for email address.
       const existingUser = await AppUser.find({
         emailAddress,
@@ -35,11 +32,6 @@ router.post(
             )
           );
       }
-
-      // * Password validations
-      // * 1 New and old password should be different
-      // * 2 Password complexity 4 char, 5 number.
-      // * 3 Password length should be greater than 8
 
       // * Change User's password with provided password.
       const newHashedPassword = await Password.toHash(newPassword);

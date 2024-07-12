@@ -1,27 +1,18 @@
 import mongoose from "mongoose";
 
-const userTypeValue = ["VISITOR", "EMPLOYEE", "ADMIN"];
-interface IAppUser {
+interface IVisitor {
   firstName: string;
   lastName: string;
   emailAddress: string;
   mobileNo: string;
   isActive: boolean;
-  isLoggedIn: boolean;
-  userType: string;
-  password: string;
-  employeeId?: string;
   companyId: string;
-  visitorId?: string;
+  createdBy: string;
 }
 
-const appUserSchema = new mongoose.Schema(
+const visitorSchema = new mongoose.Schema(
   {
     emailAddress: {
-      type: String,
-      required: true,
-    },
-    password: {
       type: String,
       required: true,
     },
@@ -37,33 +28,19 @@ const appUserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isLoggedIn: {
-      type: Boolean,
-      required: true,
-    },
     isActive: {
       type: Boolean,
       required: true,
-    },
-    userType: {
-      type: String,
-      enum: userTypeValue,
-      required: true,
-    },
-    employeeId: {
-      required: false,
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "employee",
     },
     companyId: {
       required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "company",
     },
-    visitorId: {
-      required: false,
+    createdBy: {
+      required: true,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "visitor",
+      ref: "appUser",
     },
   },
   {
@@ -72,13 +49,12 @@ const appUserSchema = new mongoose.Schema(
       transform(doc: any, ret: any) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.password;
         delete ret.__v;
       },
     },
   }
 );
 
-const AppUser = mongoose.model<IAppUser>("appUser", appUserSchema, "appUser");
+const Visitor = mongoose.model<IVisitor>("visitor", visitorSchema, "visitor");
 
-export { AppUser };
+export { Visitor };

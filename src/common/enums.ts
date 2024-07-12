@@ -1,6 +1,7 @@
-export enum ROLES {
+export enum UserType {
+  VISITOR = "VISITOR",
+  EMPLOYEE = "EMPLOYEE",
   ADMIN = "ADMIN",
-  NORMAL = "NORMAL",
 }
 
 export enum GENDER {

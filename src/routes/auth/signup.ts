@@ -2,8 +2,10 @@ import express, { Request, Response } from "express";
 import { AppUser } from "../../models/AppUser";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { Password } from "../../services/password";
-import { ROLES } from "../../common/enums";
+import { UserType } from "../../common/enums";
 import jwt from "jsonwebtoken";
+import { Employee } from "models/Employee";
+import { Visitor } from "models/Visitor";
 const router = express.Router();
 
 router.post("/api/users/signup", async (req: Request, res: Response) => {
@@ -17,8 +19,19 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       companyId,
       userType,
     } = req.body;
-    const users = await AppUser.find();
-    console.log("users :>> ", users);
+
+    let newUser = null;
+
+    if (!companyId) {
+      const response = new ApiResponseDto(
+        true,
+        `Company Information is required`,
+        [],
+        400
+      );
+      return res.status(400).send(response);
+    }
+
     // * Check if user already exist.
     const existingUser = await AppUser.find({ emailAddress });
 
@@ -35,18 +48,78 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
 
     const hashedPassword = await Password.toHash(password);
 
-    // * if user doesn't exist, create a new user
-    const newUser = await AppUser.create({
-      emailAddress,
-      password: hashedPassword,
-      isActive: true,
-      isLoggedIn: false,
-      userType: "employee",
-      firstName,
-      lastName,
-      mobileNo,
-      companyId: "667593f1f13d2e6a300b0c62",
-    });
+    if (userType === UserType.EMPLOYEE) {
+      const existingEmployee = await Employee.find({ emailAddress, companyId });
+      if (existingEmployee && existingEmployee.length === 0) {
+        const response = new ApiResponseDto(
+          true,
+          `No employee profile found for selected company and email address`,
+          [],
+          404
+        );
+        return res.status(404).send(response);
+      } else {
+        // * Create a new user for employee
+        newUser = await AppUser.create({
+          emailAddress,
+          password: hashedPassword,
+          isActive: true,
+          isLoggedIn: false,
+          userType,
+          firstName,
+          lastName,
+          mobileNo,
+          companyId,
+          visitorId: null,
+          employeeId: null,
+        });
+
+        // * Add employee id to user
+        await AppUser.findByIdAndUpdate(newUser._id, {
+          employeeId: existingEmployee[0]._id,
+        });
+      }
+    } else if (userType === UserType.VISITOR) {
+      const existingVisitor = await Visitor.find({ emailAddress, companyId });
+      if (existingVisitor && existingVisitor.length === 0) {
+        // * Create a new user for visitor
+        newUser = await AppUser.create({
+          emailAddress,
+          password: hashedPassword,
+          isActive: true,
+          isLoggedIn: false,
+          userType,
+          firstName,
+          lastName,
+          mobileNo,
+          companyId,
+          visitorId: null,
+          employeeId: null,
+        });
+
+        const newVisitor = await Visitor.create({
+          createdBy: newUser._id,
+          firstName,
+          lastName,
+          emailAddress,
+          mobileNo,
+          companyId,
+          isActive: true,
+        });
+
+        await AppUser.findByIdAndUpdate(newUser._id, {
+          visitorId: newVisitor._id,
+        });
+      }
+    } else {
+      const response = new ApiResponseDto(
+        true,
+        `Please select a valid user type`,
+        [],
+        400
+      );
+      return res.status(400).send(response);
+    }
 
     // * Generate a JWT Token for User
     const token = jwt.sign(
@@ -54,7 +127,9 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
         firstName,
         lastName,
         emailAddress,
-        role: ROLES.NORMAL,
+        userType: newUser.userType,
+        companyId,
+        appUserId: newUser._id,
       },
       process.env.JWT_KEY
     );
