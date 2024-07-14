@@ -9,6 +9,8 @@ router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
   try {
     const { companyId } = req.session?.user;
 
+    console.log("companyId :>> ", companyId);
+
     if (!companyId) {
       return res
         .status(400)
@@ -17,7 +19,7 @@ router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
 
     const { mobileNo, emailAddress } = req.query;
 
-    const filter: any = { companyId: companyId };
+    const filter: any = { companyId };
     if (mobileNo) {
       filter.mobileNo = { $regex: mobileNo };
     }

@@ -10,9 +10,14 @@ router.post(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const { appUserId } = req.session?.user;
-      const { firstName, lastName, emailAddress, mobileNo, companyId } =
-        req.body;
+      const { appUserId, companyId } = req.session?.user;
+      const { firstName, lastName, emailAddress, mobileNo } = req.body;
+
+      if (!companyId) {
+        return res
+          .status(400)
+          .send(new ApiResponseDto(true, "Company ID is required", [], 400));
+      }
 
       const existingVisitor = await Visitor.find({ emailAddress });
 
@@ -39,16 +44,15 @@ router.post(
         isActive: true,
       });
 
-      return res
-        .status(200)
-        .send(
-          new ApiResponseDto(
-            false,
-            "Visitor created successfully",
-            { visitorId: newVisitor._id, emailAddress },
-            201
-          )
-        );
+      return res.status(200).send(
+        new ApiResponseDto(
+          false,
+          "Visitor created successfully",
+          // { visitorId: newVisitor._id, emailAddress },
+          newVisitor,
+          201
+        )
+      );
     } catch (error) {
       console.error("Error occurred during create-visitor", error);
       return res

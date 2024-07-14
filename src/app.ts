@@ -43,11 +43,6 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-// app.get(`/company`, async (req, res) => {
-//   const companies = await Company.find();
-//   res.status(200).json(companies);
-// });
-
 // app.post(`/company`, (req, res) => {
 //   const company = new Company({
 //     ...req.body,
