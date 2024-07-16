@@ -78,10 +78,14 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       false,
       `User logged in successfully`,
       {
+        id: existingUser[0]._id,
         emailAddress,
         firstName: existingUser[0].firstName,
         lastName: existingUser[0].lastName,
         userType: existingUser[0].userType,
+        visitorId: existingUser[0].visitorId,
+        companyId: existingUser[0].companyId,
+        employeeId: existingUser[0].employeeId,
       },
       200
     );

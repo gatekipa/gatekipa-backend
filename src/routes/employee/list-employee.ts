@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { Employee } from "models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
+import { Types } from "mongoose";
 
 const router = express.Router();
 
@@ -16,7 +17,9 @@ router.get("/api/employee/", async (req: Request, res: Response) => {
 
     const { companyId } = req.session?.user;
 
-    const employees = await Employee.find({ companyId }).sort({
+    const employees = await Employee.find({
+      companyId: new Types.ObjectId(companyId),
+    }).sort({
       createdAt: -1,
     });
 
