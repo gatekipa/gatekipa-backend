@@ -4,9 +4,18 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 
 const router = express.Router();
 
-router.get("/api/employee/:companyId", async (req: Request, res: Response) => {
-  const { companyId } = req.params;
+router.get("/api/employee/", async (req: Request, res: Response) => {
   try {
+    if (!req.session?.user) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(true, "Company information is required", [], 400)
+        );
+    }
+
+    const { companyId } = req.session?.user;
+
     const employees = await Employee.find({ companyId }).sort({
       createdAt: -1,
     });
