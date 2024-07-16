@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { Employee } from "models/Employee";
+import { Employee } from "../../models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { Types } from "mongoose";
 

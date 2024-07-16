@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { Company } from "models/Company";
+import { Company } from "./../../models/Company";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 
 const router = express.Router();
