@@ -71,6 +71,12 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
 
     req.session.jwt = token;
 
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
     // * ===========================
 
     // * If password is correct, login user.
