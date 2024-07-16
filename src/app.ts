@@ -39,7 +39,7 @@ const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  exposedHeaders: ["Set-Cookie"],
+  exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));
