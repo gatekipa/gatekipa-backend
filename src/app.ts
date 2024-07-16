@@ -4,7 +4,7 @@ import express from "express";
 import "express-async-errors";
 
 import cors, { CorsOptions } from "cors";
-import { listCompanyRouter } from "routes/company/list-company";
+import { listCompanyRouter } from "./routes/company/list-company";
 import { changePasswordRouter } from "./routes/auth/change-password";
 import { forgotPasswordRouter } from "./routes/auth/forgot-password";
 import { newPasswordRouter } from "./routes/auth/new-password";
@@ -18,7 +18,7 @@ import { createVisitRouter } from "./routes/visitor/create-visit";
 import { createVisitorRouter } from "./routes/visitor/create-visitor";
 import { listVisitsRouter } from "./routes/visitor/list-visit";
 import { listVisitorRouter } from "./routes/visitor/list-visitor";
-import { listEmployeeRouter } from "routes/employee/list-employee";
+import { listEmployeeRouter } from "./routes/employee/list-employee";
 
 const dotenv = require("dotenv").config();
 
