@@ -31,6 +31,7 @@ app.use(
     signed: false,
     secure: process.env.NODE_ENV !== "development",
     name: "gatekipa-app-session",
+    httpOnly: true,
     sameSite: "none",
   })
 );
@@ -39,7 +40,7 @@ const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  exposedHeaders: ["set-cookie"],
+  exposedHeaders: ["Set-Cookie"],
 };
 
 app.use(cors(corsOptions));
