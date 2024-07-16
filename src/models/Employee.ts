@@ -45,7 +45,7 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
     shiftId: {
-      required: true,
+      required: false, // TODO: Add Shifts Collection
       type: mongoose.Schema.Types.ObjectId,
       ref: "shift",
     },

@@ -18,6 +18,7 @@ import { createVisitRouter } from "./routes/visitor/create-visit";
 import { createVisitorRouter } from "./routes/visitor/create-visitor";
 import { listVisitsRouter } from "./routes/visitor/list-visit";
 import { listVisitorRouter } from "./routes/visitor/list-visitor";
+import { listEmployeeRouter } from "routes/employee/list-employee";
 
 const dotenv = require("dotenv").config();
 
@@ -67,6 +68,7 @@ app.use(listVisitsRouter);
 app.use(createVisitRouter);
 app.use(checkInVisitRouter);
 app.use(checkOutVisitRouter);
+app.use(listEmployeeRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");
