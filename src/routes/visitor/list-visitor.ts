@@ -9,8 +9,6 @@ router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
   try {
     const { companyId } = req.session?.user;
 
-    console.log("companyId :>> ", companyId);
-
     if (!companyId) {
       return res
         .status(400)

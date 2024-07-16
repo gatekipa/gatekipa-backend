@@ -19,6 +19,7 @@ router.post(
         personToMeetMobileNo,
         employeeId,
         checkInWithVisitCreation,
+        visitDate,
       } = req.body;
 
       if (!visitorId) {
@@ -58,6 +59,7 @@ router.post(
         personToMeetMobileNo: personToMeetMobileNo ?? null,
         purposeOfVisit,
         visitorId,
+        visitDate,
         checkInTime: checkInWithVisitCreation === true ? new Date() : null,
       });
 

@@ -29,6 +29,9 @@ const visitSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    visitDate: {
+      type: Date,
+    },
     personToMeet: {
       type: String,
       required: false,
