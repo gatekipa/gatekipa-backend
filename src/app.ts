@@ -31,6 +31,7 @@ app.use(
     signed: false,
     secure: process.env.NODE_ENV !== "development",
     name: "gatekipa-app-session",
+    sameSite: "none",
   })
 );
 

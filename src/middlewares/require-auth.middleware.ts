@@ -7,6 +7,7 @@ export const requireAuth = (
   next: NextFunction
 ) => {
   const userToken = req.session?.jwt;
+  console.log("userToken :>> ", userToken);
   try {
     const payload = jwt.verify(userToken, process.env.JWT_KEY);
     if (!payload) {
