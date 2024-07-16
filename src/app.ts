@@ -35,7 +35,7 @@ app.use(
 );
 
 const corsOptions: CorsOptions = {
-  origin: process.env.ALLOWED_FRONTEND_ORIGIN,
+  origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   exposedHeaders: ["Set-Cookie"],
