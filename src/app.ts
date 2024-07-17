@@ -27,17 +27,17 @@ const app = express();
 
 app.use(cookieParser());
 
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 app.use(json());
-app.use(
-  cookieSession({
-    signed: false,
-    secure: process.env.NODE_ENV !== "development",
-    name: "gatekipa-app-session",
-    httpOnly: true,
-    sameSite: "none",
-  })
-);
+// app.use(
+//   cookieSession({
+//     signed: false,
+//     secure: process.env.NODE_ENV !== "development",
+//     name: "gatekipa-app-session",
+//     httpOnly: true,
+//     sameSite: "none",
+//   })
+// );
 
 const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
