@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { Employee } from "../../models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { Types } from "mongoose";
-import { requireAuth } from "middlewares/require-auth.middleware";
+import { requireAuth } from "../../middlewares/require-auth.middleware";
 
 const router = express.Router();
 
