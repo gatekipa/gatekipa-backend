@@ -2,6 +2,7 @@ import { json } from "body-parser";
 import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
+import cookieParser from "cookie-parser";
 
 import cors, { CorsOptions } from "cors";
 import { listCompanyRouter } from "./routes/company/list-company";
@@ -23,6 +24,8 @@ import { listEmployeeRouter } from "./routes/employee/list-employee";
 const dotenv = require("dotenv").config();
 
 const app = express();
+
+app.use(cookieParser());
 
 app.set("trust proxy", true);
 app.use(json());

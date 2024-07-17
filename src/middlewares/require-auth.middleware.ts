@@ -6,10 +6,11 @@ export const requireAuth = (
   res: Response,
   next: NextFunction
 ) => {
-  const userToken = req.session?.jwt;
-  console.log("userToken :>> ", userToken);
+  // const userToken = req.session?.jwt;
+  const token = req.cookies.jwt;
+  console.log("token :>> ", token);
   try {
-    const payload = jwt.verify(userToken, process.env.JWT_KEY);
+    const payload = jwt.verify(token, process.env.JWT_KEY);
     if (!payload) {
       return res
         .status(401)

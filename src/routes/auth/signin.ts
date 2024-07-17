@@ -69,12 +69,12 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       process.env.JWT_KEY
     );
 
-    req.session.jwt = token;
+    // req.session.jwt = token;
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      // sameSite: "none",
     });
 
     // * ===========================
