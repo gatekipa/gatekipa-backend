@@ -82,6 +82,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
     } else if (userType === UserType.VISITOR) {
       const existingVisitor = await Visitor.find({ emailAddress, companyId });
       if (existingVisitor && existingVisitor.length === 0) {
+        console.log("existingVisitor", existingVisitor);
         // * Create a new user for visitor
         newUser = await AppUser.create({
           emailAddress,
@@ -109,6 +110,21 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
 
         await AppUser.findByIdAndUpdate(newUser._id, {
           visitorId: newVisitor._id,
+        });
+      } else {
+        // * Create a new user for visitor
+        newUser = await AppUser.create({
+          emailAddress,
+          password: hashedPassword,
+          isActive: true,
+          isLoggedIn: false,
+          userType,
+          firstName,
+          lastName,
+          mobileNo,
+          companyId,
+          visitorId: existingVisitor[0]._id,
+          employeeId: null,
         });
       }
     } else {
