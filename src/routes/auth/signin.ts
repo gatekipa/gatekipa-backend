@@ -74,7 +74,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: true,
-      // sameSite: "none",
+      sameSite: "none",
     });
 
     // * ===========================
