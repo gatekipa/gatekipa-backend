@@ -18,7 +18,8 @@ export const requireAuth = (
         .status(401)
         .send(new ApiResponseDto(true, "Unauthorized Access", [], 401));
     }
-    req.session.user = payload;
+
+    req.user = payload;
   } catch (error) {
     console.error("Error Occurred in require-auth middleware", error);
     return res

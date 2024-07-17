@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/api/employee/", async (req: Request, res: Response) => {
   try {
-    if (!req.session?.user) {
+    if (!req?.user) {
       return res
         .status(400)
         .send(
@@ -15,7 +15,7 @@ router.get("/api/employee/", async (req: Request, res: Response) => {
         );
     }
 
-    const { companyId } = req.session?.user;
+    const { companyId } = req?.user;
 
     const employees = await Employee.find({
       companyId: new Types.ObjectId(companyId),

@@ -68,7 +68,15 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       },
       process.env.JWT_KEY
     );
-
+    // req.user = {
+    //   firstName: existingUser[0].firstName,
+    //   lastName: existingUser[0].lastName,
+    //   fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
+    //   emailAddress,
+    //   userType: existingUser[0].userType,
+    //   companyId: existingUser[0].companyId,
+    //   appUserId: existingUser[0]._id,
+    // };
     // req.session.jwt = token;
 
     res.cookie("jwt", token, {

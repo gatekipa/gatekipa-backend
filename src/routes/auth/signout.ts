@@ -9,7 +9,7 @@ router.post(
   "/api/users/signout",
   requireAuth,
   async (req: Request, res: Response) => {
-    const { emailAddress } = req.session?.user;
+    const { emailAddress } = req?.user;
     const loggedInUser = await AppUser.find({ emailAddress });
 
     if (loggedInUser && loggedInUser.length > 0) {
@@ -17,7 +17,7 @@ router.post(
         isLoggedIn: false,
       });
     }
-    req.session = null;
+    req.user = null;
     res.status(200).send(new ApiResponseDto(false, "Logout Success", [], 200));
   }
 );

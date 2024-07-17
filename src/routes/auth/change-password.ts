@@ -11,7 +11,7 @@ router.post(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const { emailAddress } = req.session?.user;
+      const { emailAddress } = req?.user;
       const { newPassword } = req.body;
 
       // * Fetch user from database for email address.

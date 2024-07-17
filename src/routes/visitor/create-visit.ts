@@ -10,7 +10,7 @@ router.post(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const { appUserId } = req.session?.user;
+      const { appUserId } = req?.user;
       const { visitorId } = req.params;
       const {
         purposeOfVisit,

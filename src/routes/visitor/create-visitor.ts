@@ -10,7 +10,7 @@ router.post(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const { appUserId, companyId } = req.session?.user;
+      const { appUserId, companyId } = req?.user;
       const { firstName, lastName, emailAddress, mobileNo } = req.body;
 
       if (!companyId) {

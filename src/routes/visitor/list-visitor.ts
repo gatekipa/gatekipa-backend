@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
   try {
-    const { companyId } = req.session?.user;
+    const { companyId } = req?.user;
 
     if (!companyId) {
       return res
