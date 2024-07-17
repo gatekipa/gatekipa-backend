@@ -63,16 +63,15 @@ router.post(
         checkInTime: checkInWithVisitCreation === true ? new Date() : null,
       });
 
-      return res
-        .status(200)
-        .send(
-          new ApiResponseDto(
-            false,
-            "Visit created successfully",
-            { visitId: newVisit._id },
-            201
-          )
-        );
+      return res.status(200).send(
+        new ApiResponseDto(
+          false,
+          "Visit created successfully",
+          // { visitId: newVisit._id },
+          newVisit,
+          201
+        )
+      );
     } catch (error) {
       console.error("Error occurred during create-visit", error);
       return res
