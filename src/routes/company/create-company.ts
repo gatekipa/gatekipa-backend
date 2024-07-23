@@ -4,6 +4,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import { CompanyCounter } from "../../models/CompanyCounter";
 import { AppUser } from "../../models/AppUser";
 import { UserType } from "../../common/enums";
+import { generateStrongPassword } from "../../services/util";
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       seq: 100000,
     });
 
-    const companyUser = await AppUser.create({
+    await AppUser.create({
       companyId: newCompany.id,
       emailAddress,
       employeeId: null,
@@ -60,7 +61,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       mobileNo,
       userType: UserType.ADMIN,
       visitorId: null,
-      password: "abc.1234",
+      password: generateStrongPassword(8),
     });
 
     return res

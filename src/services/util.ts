@@ -1,6 +1,3 @@
-import { CompanyCounter } from "../models/CompanyCounter";
-import { Employee } from "../models/Employee";
-
 export function generateRandom6DigitNumber() {
   // Generate a random number between 100,000 and 999,999
   const randomNumber = Math.floor(Math.random() * 900000) + 100000;
@@ -8,29 +5,39 @@ export function generateRandom6DigitNumber() {
   return randomNumber.toString();
 }
 
-async function generateEmployeeNo(companyId: string) {
-  const update = { $inc: { seq: 1 } };
-  const options = { new: true, upsert: true };
+export function generateStrongPassword(length = 12) {
+  // Define the character sets for letters, numbers, and symbols
+  const lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+  const uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const symbols = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
 
-  const counter = await CompanyCounter.findOneAndUpdate(
-    { companyId },
-    update,
-    options
-  );
+  // Combine all characters
+  const allCharacters = lowercaseLetters + uppercaseLetters + numbers + symbols;
 
-  if (!counter) {
-    throw new Error(`No counter found for compnayId ${companyId}`);
+  // Ensure at least one character from each set is included
+  const getRandomChar = (set: any) =>
+    set[Math.floor(Math.random() * set.length)];
+
+  // Start with one character from each character set
+  let password = [
+    getRandomChar(lowercaseLetters),
+    getRandomChar(uppercaseLetters),
+    getRandomChar(numbers),
+    getRandomChar(symbols),
+  ];
+
+  // Fill the rest of the password length with random characters
+  for (let i = password.length; i < length; i++) {
+    password.push(getRandomChar(allCharacters));
   }
 
-  const employeeNo = counter.seq;
-
-  // Ensure the employee number is unique (though it should be by design)
-  let existingEmployee = await Employee.findOne({ employeeNo });
-  if (existingEmployee) {
-    return generateEmployeeNo(companyId);
+  // Shuffle the password array to ensure randomness
+  for (let i = password.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [password[i], password[j]] = [password[j], password[i]];
   }
 
-  return employeeNo.toString();
+  // Convert the array to a string and return
+  return password.join("");
 }
-
-export { generateEmployeeNo };

@@ -25,12 +25,12 @@ router.post(
         emailAddress,
         firstName,
         lastName,
+        employeeNo,
         dateOfBirth,
         mobileNo,
         designation,
         shiftId,
       } = req?.body;
-      const employeeNo = await generateEmployeeNo();
 
       const existingUser = await Employee.find({
         emailAddress,
@@ -50,13 +50,15 @@ router.post(
           );
       }
 
+      const newEmployeeNo = await generateEmployeeNo(companyId, employeeNo);
+
       const newEmployee = await Employee.create({
         emailAddress,
         firstName,
         lastName,
         dateOfBirth,
         mobileNo,
-        employeeNo,
+        employeeNo: newEmployeeNo,
         designation,
         isActive: true,
         companyId: new Types.ObjectId(companyId),
