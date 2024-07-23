@@ -13,7 +13,12 @@ router.get("/api/company/", async (req: Request, res: Response) => {
     return res
       .status(200)
       .send(
-        new ApiResponseDto(false, "Visits fetched successfully", companies, 200)
+        new ApiResponseDto(
+          false,
+          "Companies fetched successfully",
+          companies,
+          200
+        )
       );
   } catch (error) {
     console.error("Error occurred during list-company", error);

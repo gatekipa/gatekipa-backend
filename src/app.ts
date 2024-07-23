@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import cors, { CorsOptions } from "cors";
 import { listCompanyRouter } from "./routes/company/list-company";
+import { createCompanyRouter } from "./routes/company/create-company";
 import { changePasswordRouter } from "./routes/auth/change-password";
 import { forgotPasswordRouter } from "./routes/auth/forgot-password";
 import { newPasswordRouter } from "./routes/auth/new-password";
@@ -20,6 +21,7 @@ import { createVisitorRouter } from "./routes/visitor/create-visitor";
 import { listVisitsRouter } from "./routes/visitor/list-visit";
 import { listVisitorRouter } from "./routes/visitor/list-visitor";
 import { listEmployeeRouter } from "./routes/employee/list-employee";
+import { createEmployeeRouter } from "./routes/employee/create-employee";
 
 const dotenv = require("dotenv").config();
 
@@ -49,18 +51,9 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-// app.post(`/company`, (req, res) => {
-//   const company = new Company({
-//     ...req.body,
-//     nextPaymentDate: new Date(),
-//     lastPaymentDate: new Date(),
-//   });
-//   company.save();
-//   res.status(201).send(company);
-// });
-
 app.use(signupRouter);
 app.use(listCompanyRouter);
+app.use(createCompanyRouter);
 app.use(signinRouter);
 app.use(changePasswordRouter);
 app.use(signoutRouter);
@@ -74,6 +67,7 @@ app.use(createVisitRouter);
 app.use(checkInVisitRouter);
 app.use(checkOutVisitRouter);
 app.use(listEmployeeRouter);
+app.use(createEmployeeRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 interface IEmployee {
   firstName: string;
   lastName: string;
+  employeeNo: string;
+  dateOfBirth: Date;
   emailAddress: string;
+  designation: string;
+  shiftId: string;
   mobileNo: string;
   isActive: boolean;
   companyId: string;

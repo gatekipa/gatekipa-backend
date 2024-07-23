@@ -14,9 +14,6 @@ router.post(
       const { visitorId } = req.params;
       const {
         purposeOfVisit,
-        personToMeet,
-        personToMeetEmail,
-        personToMeetMobileNo,
         employeeId,
         checkInWithVisitCreation,
         visitDate,
@@ -30,13 +27,13 @@ router.post(
           );
       }
 
-      if (!employeeId && !personToMeet) {
+      if (!employeeId) {
         return res
           .status(400)
           .send(
             new ApiResponseDto(
               true,
-              "Employee Information or Person to meet is required",
+              "Employee Information is required",
               [],
               400
             )
@@ -53,25 +50,18 @@ router.post(
 
       const newVisit = await Visits.create({
         createdBy: appUserId,
-        employeeId: employeeId ?? null,
-        personToMeet: personToMeet ?? null,
-        personToMeetEmail: personToMeetEmail ?? null,
-        personToMeetMobileNo: personToMeetMobileNo ?? null,
+        employee: employeeId,
         purposeOfVisit,
-        visitorId,
+        visitor: visitorId,
         visitDate,
         checkInTime: checkInWithVisitCreation === true ? new Date() : null,
       });
 
-      return res.status(200).send(
-        new ApiResponseDto(
-          false,
-          "Visit created successfully",
-          // { visitId: newVisit._id },
-          newVisit,
-          201
-        )
-      );
+      return res
+        .status(200)
+        .send(
+          new ApiResponseDto(false, "Visit created successfully", newVisit, 201)
+        );
     } catch (error) {
       console.error("Error occurred during create-visit", error);
       return res

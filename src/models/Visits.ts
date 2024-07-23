@@ -1,12 +1,9 @@
 import mongoose from "mongoose";
 
 interface IVisits {
-  visitorId: string;
+  visitor: string;
   purposeOfVisit: string;
-  personToMeet: string;
-  personToMeetEmail: string;
-  personToMeetMobileNo: string;
-  employeeId?: string;
+  employee?: string;
   checkInTime?: Date;
   checkoutTime?: Date;
   createdBy: string;
@@ -15,13 +12,13 @@ interface IVisits {
 
 const visitSchema = new mongoose.Schema(
   {
-    visitorId: {
+    visitor: {
       required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "visitor",
     },
-    employeeId: {
-      required: false,
+    employee: {
+      required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "employee",
     },
@@ -31,18 +28,6 @@ const visitSchema = new mongoose.Schema(
     },
     visitDate: {
       type: Date,
-    },
-    personToMeet: {
-      type: String,
-      required: false,
-    },
-    personToMeetMobileNo: {
-      type: String,
-      required: false,
-    },
-    personToMeetEmail: {
-      type: String,
-      required: false,
     },
     checkInTime: {
       type: Date,

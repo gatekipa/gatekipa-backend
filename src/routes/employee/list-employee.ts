@@ -10,7 +10,6 @@ router.get(
   "/api/employee/",
   requireAuth,
   async (req: Request, res: Response) => {
-    console.log("req?.user :>> ", req?.user);
     try {
       if (!req?.user) {
         return res

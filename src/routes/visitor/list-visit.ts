@@ -12,13 +12,23 @@ router.get(
     try {
       const { visitorId } = req.params;
 
+      console.log(visitorId);
+
       if (!visitorId) {
         return res
           .status(400)
           .send(new ApiResponseDto(true, "Visitor ID is required", [], 400));
       }
 
-      const visits = await Visits.find({ visitorId }).sort({ createdAt: -1 });
+      const visits = await Visits.find({ visitor: visitorId })
+        .populate({
+          path: "employee",
+          select: "firstName lastName emailAddress mobileNo",
+        })
+        .select(
+          "visitorId purposeOfVisit visitDate checkInTime checkoutTime id createdBy"
+        )
+        .sort({ createdAt: -1 });
 
       return res
         .status(200)

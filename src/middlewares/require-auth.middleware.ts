@@ -9,8 +9,8 @@ export const requireAuth = (
   // const userToken = req.session?.jwt;
   const token = req.cookies?.jwt;
 
-  console.log("req.cookies :>> ", req.cookies);
-  console.log("token :>> ", token);
+  //console.log("req.cookies :>> ", req.cookies);
+  //console.log("token :>> ", token);
   try {
     const payload = jwt.verify(token, process.env.JWT_KEY);
     if (!payload) {
