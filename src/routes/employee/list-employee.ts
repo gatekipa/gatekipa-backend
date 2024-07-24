@@ -21,11 +21,20 @@ router.get(
 
       const { companyId } = req?.user;
 
-      const employees = await Employee.find({
-        companyId: new Types.ObjectId(companyId),
-      }).sort({
-        createdAt: -1,
-      });
+      const { mobileNo, emailAddress, employeeNo } = req.query;
+
+      const filter: any = { companyId };
+      if (mobileNo) {
+        filter.mobileNo = { $regex: mobileNo };
+      }
+      if (mobileNo) {
+        filter.employeeNo = { $regex: employeeNo };
+      }
+      if (emailAddress) {
+        filter.emailAddress = { $regex: emailAddress };
+      }
+
+      const employees = await Employee.find(filter);
 
       return res
         .status(200)
