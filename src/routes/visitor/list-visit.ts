@@ -12,8 +12,6 @@ router.get(
     try {
       const { visitorId } = req.params;
 
-      console.log(visitorId);
-
       if (!visitorId) {
         return res
           .status(400)

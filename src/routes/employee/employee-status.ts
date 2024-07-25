@@ -16,7 +16,14 @@ router.post(
       if (!employeeId) {
         return res
           .status(400)
-          .send(new ApiResponseDto(true, "Employee ID is required", [], 400));
+          .send(
+            new ApiResponseDto(
+              true,
+              "Employee Information is required",
+              [],
+              400
+            )
+          );
       }
 
       const { status } = req?.body;

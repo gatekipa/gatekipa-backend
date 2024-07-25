@@ -7,11 +7,12 @@ interface IEmployee {
   dateOfBirth: Date;
   emailAddress: string;
   designation: string;
-  shiftId: string;
+  shift: string;
   mobileNo: string;
   isActive: boolean;
   companyId: string;
   createdBy: string;
+  updatedBy?: string;
 }
 
 const employeeSchema = new mongoose.Schema(
@@ -48,8 +49,8 @@ const employeeSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    shiftId: {
-      required: false, // TODO: Add Shifts Collection
+    shift: {
+      required: false,
       type: mongoose.Schema.Types.ObjectId,
       ref: "shift",
     },
@@ -60,6 +61,11 @@ const employeeSchema = new mongoose.Schema(
     },
     createdBy: {
       required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "appUser",
+    },
+    updatedBy: {
+      required: false,
       type: mongoose.Schema.Types.ObjectId,
       ref: "appUser",
     },

@@ -34,7 +34,10 @@ router.get(
         filter.emailAddress = { $regex: emailAddress };
       }
 
-      const employees = await Employee.find(filter);
+      const employees = await Employee.find(filter).populate({
+        path: "shift",
+        select: "_id name isActive",
+      });
 
       return res
         .status(200)

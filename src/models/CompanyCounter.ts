@@ -12,7 +12,7 @@ const CompanyCounterSchema: Schema = new Schema({
     ref: "company",
     unique: true,
   },
-  seq: { type: Number, default: 100000 },
+  seq: { type: Number, default: 10000 },
 });
 
 const CompanyCounter = mongoose.model<ICompanyCounter>(

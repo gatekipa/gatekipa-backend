@@ -12,7 +12,9 @@ router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
     if (!companyId) {
       return res
         .status(400)
-        .send(new ApiResponseDto(true, "Company ID is required", [], 400));
+        .send(
+          new ApiResponseDto(true, "Company information is required", [], 400)
+        );
     }
 
     const { mobileNo, emailAddress } = req.query;

@@ -1,9 +1,10 @@
+import { Types } from "mongoose";
 import express, { Request, Response } from "express";
 import { Employee } from "../../models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
-import { Types } from "mongoose";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { generateEmployeeNo } from "../../services/employee";
+import { Shift } from "../../models/Shift";
 
 const router = express.Router();
 
@@ -21,6 +22,15 @@ router.post(
       }
 
       const { companyId, appUserId } = req?.user;
+
+      if (!companyId) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(true, "Company Information is required", [], 400)
+          );
+      }
+
       const {
         emailAddress,
         firstName,
@@ -31,6 +41,28 @@ router.post(
         designation,
         shiftId,
       } = req?.body;
+
+      if (!shiftId) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(true, "Shift Information is required", [], 400)
+          );
+      }
+
+      const shift = await Shift.findById(shiftId);
+      if (!shift) {
+        return res
+          .status(404)
+          .send(
+            new ApiResponseDto(
+              true,
+              "No shift found with provided information",
+              [],
+              404
+            )
+          );
+      }
 
       const existingUser = await Employee.find({
         emailAddress,
@@ -63,7 +95,7 @@ router.post(
         isActive: true,
         companyId: new Types.ObjectId(companyId),
         createdBy: new Types.ObjectId(appUserId),
-        shiftId: new Types.ObjectId(shiftId),
+        shift: new Types.ObjectId(shift._id),
       });
 
       return res

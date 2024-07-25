@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 interface ICompany {
   name: string;
+  ownerFirstName: string;
+  ownerLastName: string;
   emailAddress: string;
   mobileNo: string;
   isSubscriptionActive: boolean;
@@ -19,6 +21,14 @@ const companySchema = new mongoose.Schema(
       required: true,
     },
     name: {
+      type: String,
+      required: true,
+    },
+    ownerFirstName: {
+      type: String,
+      required: true,
+    },
+    ownerLastName: {
       type: String,
       required: true,
     },

@@ -21,6 +21,8 @@ router.post("/api/company", async (req: Request, res: Response) => {
       address,
     } = req.body;
 
+    console.log(req.body);
+
     const existingCompany = await Company.findOne({
       emailAddress,
       companyCode,
@@ -33,10 +35,27 @@ router.post("/api/company", async (req: Request, res: Response) => {
         .send(new ApiResponseDto(true, "Company already exists", [], 400));
     }
 
+    // * Check for existing user for this company.
+    const existingUser = await AppUser.findOne({ emailAddress });
+    if (existingUser) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(
+            true,
+            "User with email address already exists",
+            [],
+            400
+          )
+        );
+    }
+
     const newCompany = await Company.create({
       companyCode,
       name,
       emailAddress,
+      ownerFirstName,
+      ownerLastName,
       mobileNo,
       address,
       isSubscriptionActive: true,
@@ -47,7 +66,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
 
     await CompanyCounter.create({
       companyId: newCompany.id,
-      seq: 100000,
+      seq: 10000,
     });
 
     await AppUser.create({
@@ -61,7 +80,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       mobileNo,
       userType: UserType.ADMIN,
       visitorId: null,
-      password: generateStrongPassword(8),
+      password: await generateStrongPassword(8),
     });
 
     return res
@@ -75,13 +94,13 @@ router.post("/api/company", async (req: Request, res: Response) => {
         )
       );
   } catch (error) {
-    console.error("Error occurred during list-company", error);
+    console.error("Error occurred during creating-company", error);
     return res
       .status(500)
       .send(
         new ApiResponseDto(
           true,
-          "Something wen't wrong while fetching company",
+          "Something wen't wrong while creating company",
           [],
           500
         )
