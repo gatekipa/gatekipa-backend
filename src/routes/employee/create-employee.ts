@@ -98,13 +98,17 @@ router.post(
         shift: new Types.ObjectId(shift._id),
       });
 
+      const newEmployeeData = await Employee.findById(newEmployee._id).populate(
+        { path: "shift", select: "_id name startTime endTime" }
+      );
+
       return res
         .status(201)
         .send(
           new ApiResponseDto(
             false,
             "Employees created successfully",
-            newEmployee,
+            newEmployeeData,
             201
           )
         );
