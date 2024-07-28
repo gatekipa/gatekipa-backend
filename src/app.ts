@@ -1,33 +1,36 @@
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import express from 'express';
-import 'express-async-errors';
-import cookieParser from 'cookie-parser';
+import { json } from "body-parser";
+import cookieSession from "cookie-session";
+import express from "express";
+import "express-async-errors";
+import cookieParser from "cookie-parser";
 
-import cors, { CorsOptions } from 'cors';
-import { listCompanyRouter } from './routes/company/list-company';
-import { createCompanyRouter } from './routes/company/create-company';
-import { changePasswordRouter } from './routes/auth/change-password';
-import { forgotPasswordRouter } from './routes/auth/forgot-password';
-import { newPasswordRouter } from './routes/auth/new-password';
-import { signinRouter } from './routes/auth/signin';
-import { signoutRouter } from './routes/auth/signout';
-import { signupRouter } from './routes/auth/signup';
-import { verifyForgotPasswordTokenRouter } from './routes/auth/verify-forgot-pass-token';
-import { checkInVisitRouter } from './routes/visitor/check-in';
-import { checkOutVisitRouter } from './routes/visitor/check-out';
-import { createVisitRouter } from './routes/visitor/create-visit';
-import { createVisitorRouter } from './routes/visitor/create-visitor';
-import { listVisitsRouter } from './routes/visitor/list-visit';
-import { listVisitorRouter } from './routes/visitor/list-visitor';
-import { listEmployeeRouter } from './routes/employee/list-employee';
-import { createEmployeeRouter } from './routes/employee/create-employee';
-import { employeeStatusRouter } from './routes/employee/employee-status';
-import { listShiftRouter } from './routes/shift/list-shift';
-import { createShiftRouter } from './routes/shift/create-shift';
-import { editEmployeeRouter } from './routes/employee/edit-employee';
+import cors, { CorsOptions } from "cors";
+import { listCompanyRouter } from "./routes/company/list-company";
+import { createCompanyRouter } from "./routes/company/create-company";
+import { changePasswordRouter } from "./routes/auth/change-password";
+import { forgotPasswordRouter } from "./routes/auth/forgot-password";
+import { newPasswordRouter } from "./routes/auth/new-password";
+import { signinRouter } from "./routes/auth/signin";
+import { signoutRouter } from "./routes/auth/signout";
+import { signupRouter } from "./routes/auth/signup";
+import { verifyForgotPasswordTokenRouter } from "./routes/auth/verify-forgot-pass-token";
+import { checkInVisitRouter } from "./routes/visitor/check-in";
+import { checkOutVisitRouter } from "./routes/visitor/check-out";
+import { createVisitRouter } from "./routes/visitor/create-visit";
+import { createVisitorRouter } from "./routes/visitor/create-visitor";
+import { listVisitsRouter } from "./routes/visitor/list-visit";
+import { listVisitorRouter } from "./routes/visitor/list-visitor";
+import { listEmployeeRouter } from "./routes/employee/list-employee";
+import { createEmployeeRouter } from "./routes/employee/create-employee";
+import { employeeStatusRouter } from "./routes/employee/employee-status";
+import { listShiftRouter } from "./routes/shift/list-shift";
+import { createShiftRouter } from "./routes/shift/create-shift";
+import { editEmployeeRouter } from "./routes/employee/edit-employee";
+import { employeeCheckInRouter } from "./routes/employee/employee-check-in";
+import { employeeCheckOutRouter } from "./routes/employee/employee-check-out";
+import { listEmployeeVisitsRouter } from "./routes/employee/list-employee-visit";
 
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 
 const app = express();
 
@@ -47,13 +50,13 @@ app.use(json());
 
 const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  exposedHeaders: ['Set-Cookie'],
+  exposedHeaders: ["Set-Cookie"],
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(signupRouter);
 app.use(listCompanyRouter);
@@ -76,13 +79,16 @@ app.use(employeeStatusRouter);
 app.use(listShiftRouter);
 app.use(createShiftRouter);
 app.use(editEmployeeRouter);
+app.use(employeeCheckInRouter);
+app.use(employeeCheckOutRouter);
+app.use(listEmployeeVisitsRouter);
 
-app.use('/', (req, res) => {
-  res.send('GateKipa Backend API');
+app.use("/", (req, res) => {
+  res.send("GateKipa Backend API");
 });
 
-app.all('*', (req, res, next) => {
-  throw new Error('Route not found');
+app.all("*", (req, res, next) => {
+  throw new Error("Route not found");
 });
 
 //app.use(globalErrorMiddleware);
