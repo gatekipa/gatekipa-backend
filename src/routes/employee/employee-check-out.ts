@@ -71,10 +71,16 @@ router.post(
           );
       }
 
-      await EmployeeVisit.findByIdAndUpdate(employeeId, {
-        checkOutTime: new Date(),
-        updatedBy: appUserId,
-      });
+      const updatedEmployeeVisit = await EmployeeVisit.findByIdAndUpdate(
+        employeeId,
+        {
+          checkOutTime: new Date(),
+          updatedBy: appUserId,
+        },
+        {
+          new: true,
+        }
+      );
 
       return res
         .status(200)
@@ -82,7 +88,7 @@ router.post(
           new ApiResponseDto(
             false,
             "Employee checked out successfully",
-            [],
+            updatedEmployeeVisit,
             200
           )
         );
