@@ -2,6 +2,8 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { EmployeeVisit } from "models/EmployeeVisits";
+import { Employee } from "models/Employee";
+import mongoose, { Types } from "mongoose";
 
 const router = express.Router();
 
@@ -27,7 +29,7 @@ router.post(
           );
       }
 
-      const existingEmployee = await EmployeeVisit.findOne({
+      const existingEmployee = await Employee.findOne({
         _id: employeeId,
       });
 
@@ -51,20 +53,22 @@ router.post(
       endOfDay.setHours(23, 59, 59, 999);
 
       const existingEmployeeVisit = await EmployeeVisit.findOne({
+        employee: new Types.ObjectId(employeeId),
+        checkInTime: { $ne: null },
+        checkOutTime: { $eq: null },
         createdAt: {
           $gte: startOfDay,
           $lt: endOfDay,
         },
-        employee: employeeId,
       });
 
-      if (existingEmployeeVisit && !existingEmployeeVisit.checkInTime) {
+      if (!existingEmployeeVisit) {
         return res
           .status(400)
           .send(
             new ApiResponseDto(
               true,
-              `Employee hasn't checked in for today so can't proceed with checkout`,
+              `Employee hasn't checked in for today or has already checked out`,
               [],
               400
             )
@@ -72,7 +76,9 @@ router.post(
       }
 
       const updatedEmployeeVisit = await EmployeeVisit.findByIdAndUpdate(
-        employeeId,
+        {
+          _id: existingEmployeeVisit._id,
+        },
         {
           checkOutTime: new Date(),
           updatedBy: appUserId,
@@ -81,6 +87,8 @@ router.post(
           new: true,
         }
       );
+
+      console.log("updatedEmployeeVisit :>> ", updatedEmployeeVisit);
 
       return res
         .status(200)

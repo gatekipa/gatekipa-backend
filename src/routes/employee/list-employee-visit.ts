@@ -2,6 +2,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { EmployeeVisit } from "models/EmployeeVisits";
+import { Employee } from "models/Employee";
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get(
           );
       }
 
-      const existingEmployee = await EmployeeVisit.findOne({
+      const existingEmployee = await Employee.findOne({
         _id: employeeId,
       });
 

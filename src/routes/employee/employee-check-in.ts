@@ -2,6 +2,8 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { EmployeeVisit } from "models/EmployeeVisits";
+import { Employee } from "models/Employee";
+import { Types } from "mongoose";
 
 const router = express.Router();
 
@@ -27,7 +29,7 @@ router.post(
           );
       }
 
-      const existingEmployee = await EmployeeVisit.findOne({
+      const existingEmployee = await Employee.findOne({
         _id: employeeId,
       });
 
@@ -51,11 +53,11 @@ router.post(
       endOfDay.setHours(23, 59, 59, 999);
 
       const existingEmployeeVisit = await EmployeeVisit.findOne({
+        employee: new Types.ObjectId(employeeId),
         createdAt: {
           $gte: startOfDay,
           $lt: endOfDay,
         },
-        employee: employeeId,
       });
 
       if (existingEmployeeVisit && existingEmployeeVisit.checkInTime) {
@@ -71,7 +73,7 @@ router.post(
           );
       }
 
-      const newEmployeeVisit = new EmployeeVisit({
+      const newEmployeeVisit = await EmployeeVisit.create({
         employee: employeeId,
         checkInTime: new Date(),
         createdBy: appUserId,
