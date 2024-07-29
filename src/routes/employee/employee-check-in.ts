@@ -1,8 +1,8 @@
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
-import { EmployeeVisit } from "models/EmployeeVisits";
-import { Employee } from "models/Employee";
+import { EmployeeVisit } from "../../models/EmployeeVisits";
+import { Employee } from "../../models/Employee";
 import { Types } from "mongoose";
 
 const router = express.Router();

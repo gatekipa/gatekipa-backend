@@ -1,5 +1,4 @@
 import { json } from "body-parser";
-import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
 import cookieParser from "cookie-parser";
@@ -36,8 +35,8 @@ const app = express();
 
 app.use(cookieParser());
 
-// app.set("trust proxy", true);
 app.use(json());
+// app.set("trust proxy", true);
 // app.use(
 //   cookieSession({
 //     signed: false,
