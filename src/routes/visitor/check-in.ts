@@ -93,11 +93,13 @@ router.post(
         .replace("{{visitorName}}", `${visitor.firstName} ${visitor.lastName}`)
         .replace("{{arrivalTime}}", checkInTimeFormatted);
 
-      await sendEmail(
+      const emailResponse = await sendEmail(
         employee?.emailAddress,
         "GateKipa - Your visitor has arrived",
         emailContent
       );
+
+      console.log("emailResponse :>> ", emailResponse);
 
       return res
         .status(200)
