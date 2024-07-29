@@ -6,7 +6,11 @@ export async function generateEmployeeNo(
   employeeNo: string | undefined | null
 ) {
   // Check if employeeNo is provided and not undefined or null
-  if (employeeNo !== undefined && employeeNo !== null) {
+  if (
+    employeeNo !== undefined &&
+    employeeNo !== null &&
+    employeeNo?.trim().length !== 0
+  ) {
     // Check if the employeeNo already exists for the given company
     const existingEmployee = await Employee.findOne({
       employeeNo,
