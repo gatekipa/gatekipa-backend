@@ -1,12 +1,12 @@
-import express, { Request, Response } from 'express';
-import { Employee } from '../../models/Employee';
-import { ApiResponseDto } from '../../dto/api-response.dto';
-import { requireAuth } from '../../middlewares/require-auth.middleware';
+import express, { Request, Response } from "express";
+import { Employee } from "../../models/Employee";
+import { ApiResponseDto } from "../../dto/api-response.dto";
+import { requireAuth } from "../../middlewares/require-auth.middleware";
 
 const router = express.Router();
 
 router.put(
-  '/api/employee/:employeeId',
+  "/api/employee/:employeeId",
   requireAuth,
   async (req: Request, res: Response) => {
     try {
@@ -16,16 +16,13 @@ router.put(
       const {
         firstName,
         lastName,
-        emailAddress,
         mobileNo,
-        isActive,
         designation,
         shiftId,
-        employeeNo,
         dateOfBirth,
-        createdBy,
-        createdAt,
-        updatedAt,
+        timesheetDueDate,
+        payDate,
+        payrollPeriodEndDate,
       } = req.body;
 
       if (!employeeId) {
@@ -34,7 +31,7 @@ router.put(
           .send(
             new ApiResponseDto(
               true,
-              'Employee Information is required',
+              "Employee Information is required",
               [],
               400
             )
@@ -61,22 +58,32 @@ router.put(
 
       const newEmployee = await Employee.findByIdAndUpdate(
         employeeId,
-        { ...req.body, shift: shiftId },
+        {
+          firstName,
+          lastName,
+          mobileNo,
+          designation,
+          payDate,
+          timesheetDueDate,
+          payrollPeriodEndDate,
+          dateOfBirth,
+          shift: shiftId,
+        },
         { new: true }
-      ).populate('shift');
+      ).populate("shift");
 
       return res
         .status(200)
         .send(
           new ApiResponseDto(
             false,
-            'Employee updated successfully',
+            "Employee updated successfully",
             newEmployee,
             200
           )
         );
     } catch (error) {
-      console.error('Error occurred while updating employee', error);
+      console.error("Error occurred while updating employee", error);
       return res
         .status(500)
         .send(

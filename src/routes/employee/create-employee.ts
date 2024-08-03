@@ -40,6 +40,9 @@ router.post(
         mobileNo,
         designation,
         shiftId,
+        timesheetDueDate,
+        payrollPeriodEndDate,
+        payDate,
       } = req?.body;
 
       if (!shiftId) {
@@ -96,6 +99,9 @@ router.post(
         companyId: new Types.ObjectId(companyId),
         createdBy: new Types.ObjectId(appUserId),
         shift: new Types.ObjectId(shift._id),
+        timesheetDueDate,
+        payDate,
+        payrollPeriodEndDate,
       });
 
       const newEmployeeData = await Employee.findById(newEmployee._id).populate(

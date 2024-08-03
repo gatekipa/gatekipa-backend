@@ -10,6 +10,9 @@ interface IEmployee {
   shift: string;
   mobileNo: string;
   isActive: boolean;
+  payrollPeriodEndDate: Date;
+  timesheetDueDate: Date;
+  payDate: Date;
   companyId: string;
   createdBy: string;
   updatedBy?: string;
@@ -30,6 +33,18 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
     dateOfBirth: {
+      type: Date,
+      required: true,
+    },
+    payrollPeriodEndDate: {
+      type: Date,
+      required: true,
+    },
+    timesheetDueDate: {
+      type: Date,
+      required: true,
+    },
+    payDate: {
       type: Date,
       required: true,
     },
