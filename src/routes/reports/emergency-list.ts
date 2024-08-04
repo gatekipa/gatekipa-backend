@@ -6,7 +6,7 @@ import { EmployeeVisit } from "models/EmployeeVisits";
 
 const router = express.Router();
 
-router.post(
+router.get(
   "/api/reports/emergency-list/:type",
   requireAuth,
   async (req: Request, res: Response) => {
