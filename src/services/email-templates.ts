@@ -50,8 +50,8 @@ export const EMERGENCY_LIST_EMAIL = `<div style="margin: 0; padding: 0; font-fam
                     </tr>
                     <tr>
                         <td align="center" style="background-color: #f2f2f2; padding: 20px; color: #666666; font-size: 14px;">
-                            <p style="margin: 0;">If you have any questions, please contact the building management at <a href="tel:+1234567890" style="color: #d32f2f;">+1 234 567 890</a> or email <a href="mailto:info@building.com" style="color: #d32f2f;">info@building.com</a>.</p>
-                            <p style="margin: 0;">Gatekipa Team</p>
+                            <p style="margin: 0;">If you have any questions, please contact the building management at <a href="tel:{{companyMobileNo}}" style="color: #d32f2f;">{{companyMobileNo}}</a> or email <a href="mailto:{{companyEmail}}" style="color: #d32f2f;">{{companyEmail}}</a>.</p>
+                            <p style="margin: 0;">{{companyName}} Team</p>
                         </td>
                     </tr>
                 </table>

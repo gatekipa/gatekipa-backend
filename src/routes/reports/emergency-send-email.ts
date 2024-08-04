@@ -5,6 +5,7 @@ import { Visits } from "../../models/Visits";
 import { EmployeeVisit } from "../../models/EmployeeVisits";
 import { EMERGENCY_LIST_EMAIL } from "../../services/email-templates";
 import { sendManyEmail } from "../../services/mailer";
+import { Company } from "../../models/Company";
 
 const router = express.Router();
 
@@ -13,7 +14,31 @@ router.post(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
+      const { companyId } = req.user;
       const { type, content, subject } = req.body;
+
+      if (!companyId) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(true, "Company Information is required", [], 400)
+          );
+      }
+
+      const company = await Company.findOne({ _id: companyId });
+
+      if (!company) {
+        return res
+          .status(404)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Company not found with provided information",
+              [],
+              404
+            )
+          );
+      }
 
       if (!type || type.trim().length === 0) {
         return res
@@ -52,7 +77,17 @@ router.post(
           );
       }
 
-      await sendManyEmail(toEmailAddress, subject, EMERGENCY_LIST_EMAIL);
+      // * Making emails unique to avoid sending multiple emails.
+      toEmailAddress = Array.from(new Set(toEmailAddress));
+
+      const emailContent = EMERGENCY_LIST_EMAIL.replace(
+        "{{companyName}}",
+        company.name
+      )
+        .replace("{{companyMobileNo}}", company.mobileNo)
+        .replace("{{companyEmail}}", company.emailAddress);
+
+      await sendManyEmail(toEmailAddress, subject, emailContent);
       console.log(`Email sent to ${toEmailAddress}`);
 
       return res
