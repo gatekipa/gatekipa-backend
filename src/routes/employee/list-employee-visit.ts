@@ -45,7 +45,12 @@ router.get(
 
       const employeeVisits = await EmployeeVisit.find({
         employee: employeeId,
-      }).sort({ createdAt: -1 });
+      })
+        .populate({
+          path: "employee",
+          select: "firstName lastName emailAddress mobileNo",
+        })
+        .sort({ createdAt: -1 });
 
       return res
         .status(200)
