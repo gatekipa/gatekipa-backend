@@ -75,6 +75,7 @@ router.post(
         visitor: visitorId,
         visitDate,
         checkInTime: checkInWithVisitCreation === true ? new Date() : null,
+        checkoutTime: null,
       });
 
       return res
