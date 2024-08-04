@@ -2,7 +2,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { Visits } from "../../models/Visits";
-import { EmployeeVisit } from "models/EmployeeVisits";
+import { EmployeeVisit } from "../../models/EmployeeVisits";
 
 const router = express.Router();
 
