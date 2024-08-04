@@ -85,6 +85,8 @@ router.post(
         company.name
       )
         .replace("{{companyMobileNo}}", company.mobileNo)
+        .replace("{{companyEmail}}", company.emailAddress)
+        .replace("{{companyMobileNo}}", company.mobileNo)
         .replace("{{companyEmail}}", company.emailAddress);
 
       await sendManyEmail(toEmailAddress, subject, emailContent);

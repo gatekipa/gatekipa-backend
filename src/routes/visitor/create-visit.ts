@@ -34,6 +34,8 @@ router.post(
         checkoutTime: { $eq: null },
       });
 
+      console.log(existingCheckInVisits);
+
       if (existingCheckInVisits && existingCheckInVisits.length > 0) {
         return res
           .status(400)
