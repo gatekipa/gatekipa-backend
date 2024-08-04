@@ -27,6 +27,26 @@ router.post(
           );
       }
 
+      // * Finds visits where checkInTime is null and checkoutTime is not null for visitorId
+      const existingCheckInVisits = await Visits.find({
+        visitor: visitorId,
+        checkInTime: { $ne: null },
+        checkoutTime: { $eq: null },
+      });
+
+      if (existingCheckInVisits && existingCheckInVisits.length > 0) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "You already have a checked in visit. Please checkout first before creating a new one",
+              [],
+              400
+            )
+          );
+      }
+
       if (!employeeId) {
         return res
           .status(400)
