@@ -80,10 +80,19 @@ router.post(
         checkoutTime: null,
       });
 
+      const createdVisit = await Visits.findById(newVisit._id).populate(
+        "employee"
+      );
+
       return res
         .status(200)
         .send(
-          new ApiResponseDto(false, "Visit created successfully", newVisit, 201)
+          new ApiResponseDto(
+            false,
+            "Visit created successfully",
+            createdVisit,
+            201
+          )
         );
     } catch (error) {
       console.error("Error occurred during create-visit", error);
