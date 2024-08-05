@@ -1,13 +1,13 @@
-import { ApiResponseDto } from "../../dto/api-response.dto";
-import express, { Request, Response } from "express";
-import { requireAuth } from "../../middlewares/require-auth.middleware";
-import { EmployeeVisit } from "../../models/EmployeeVisits";
-import { Employee } from "../../models/Employee";
+import { ApiResponseDto } from '../../dto/api-response.dto';
+import express, { Request, Response } from 'express';
+import { requireAuth } from '../../middlewares/require-auth.middleware';
+import { EmployeeVisit } from '../../models/EmployeeVisits';
+import { Employee } from '../../models/Employee';
 
 const router = express.Router();
 
 router.get(
-  "/api/employee/visit/:employeeId",
+  '/api/employee/visit/:employeeId',
   requireAuth,
   async (req: Request, res: Response) => {
     try {
@@ -19,7 +19,7 @@ router.get(
           .send(
             new ApiResponseDto(
               true,
-              "Employee Information is required",
+              'Employee Information is required',
               [],
               400
             )
@@ -45,25 +45,24 @@ router.get(
 
       const employeeVisits = await EmployeeVisit.find({
         employee: employeeId,
-      })
-        .populate({
-          path: "employee",
-          select: "firstName lastName emailAddress mobileNo",
-        })
-        .sort({ createdAt: -1 });
+      }).sort({ createdAt: -1 });
+
+      const employee = await Employee.findOne({ _id: employeeId }).populate(
+        'shift'
+      );
 
       return res
         .status(200)
         .send(
           new ApiResponseDto(
             false,
-            "Employee visits fetched successfully",
-            employeeVisits,
+            'Employee visits fetched successfully',
+            { employee, employeeVisits },
             200
           )
         );
     } catch (error) {
-      console.error("Error occurred during list-employee-visits", error);
+      console.error('Error occurred during list-employee-visits', error);
       return res
         .status(500)
         .send(
