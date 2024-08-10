@@ -32,6 +32,8 @@ import { employeeVisitsReportRouter } from "./routes/reports/employee-visits";
 import { visitorsVisitReportRouter } from "./routes/reports/visitors-visits";
 import { emergencyListReportRouter } from "./routes/reports/emergency-list";
 import { emergencySendEmailRouter } from "./routes/reports/emergency-send-email";
+import { verifyEmailRouter } from "./routes/auth/verify-email";
+import { verifyEmailTokenRouter } from "./routes/auth/verify-email-token";
 
 const dotenv = require("dotenv").config();
 
@@ -89,6 +91,8 @@ app.use(employeeVisitsReportRouter);
 app.use(visitorsVisitReportRouter);
 app.use(emergencyListReportRouter);
 app.use(emergencySendEmailRouter);
+app.use(verifyEmailRouter);
+app.use(verifyEmailTokenRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

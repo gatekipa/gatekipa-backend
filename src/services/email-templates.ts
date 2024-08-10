@@ -17,6 +17,19 @@ export const VISITOR_ARRIVED_EMAIL_TEMPLATE = `<div style="max-width: 600px; mar
         </div>
     </div>`;
 
+export const EMAIL_VERIFICATION_TEMPLATE = `<div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333333; text-align: center;">GateKipa - Email Verification</h2>
+        <p style="color: #666666; text-align: center;">Please use the verification code below to verify your email address.</p>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <span style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: #ffffff; font-size: 24px; letter-spacing: 4px; border-radius: 4px;">{{VERIFICATION_CODE}}</span>
+        </div>
+
+        <p style="color: #666666;">If you did not request this email, please ignore it. This verification code will expire in 60 minutes.</p>
+
+        <p style="color: #666666; text-align: center; font-size: 12px;">&copy; ${new Date().getFullYear()} GateKipa. All rights reserved.</p>
+    </div>`;
+
 export const EMERGENCY_LIST_EMAIL = `<div style="margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f2f2f2; padding: 20px;">
         <tr>
