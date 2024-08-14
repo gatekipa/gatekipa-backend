@@ -5,6 +5,7 @@ import { CompanyCounter } from "../../models/CompanyCounter";
 import { AppUser } from "../../models/AppUser";
 import { UserType } from "../../common/enums";
 import { generateStrongPassword } from "../../services/util";
+import { Stripe } from "stripe";
 
 const router = express.Router();
 
@@ -21,8 +22,6 @@ router.post("/api/company", async (req: Request, res: Response) => {
       address,
       isEmailVerified,
     } = req.body;
-
-    console.log(req.body);
 
     const existingCompany = await Company.findOne({
       emailAddress,
@@ -51,6 +50,26 @@ router.post("/api/company", async (req: Request, res: Response) => {
         );
     }
 
+    // * Generating stripe customer ID
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2024-06-20",
+    });
+
+    const stripeCustomer = await stripe.customers.create({
+      email: emailAddress,
+      name: `${ownerFirstName} ${ownerLastName}`,
+      description: `${name}`,
+      phone: mobileNo,
+    });
+
+    if (!stripeCustomer) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(true, "Stripe customer creation failed", [], 400)
+        );
+    }
+
     const newCompany = await Company.create({
       companyCode,
       name,
@@ -62,7 +81,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       isSubscriptionActive: false,
       lastPaymentDate: new Date(),
       nextPaymentDate: new Date(),
-      stripeCustomerId: "testId_123131313",
+      stripeCustomerId: stripeCustomer.id,
     });
 
     await CompanyCounter.create({
