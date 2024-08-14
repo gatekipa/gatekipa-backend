@@ -42,6 +42,6 @@ export async function generateStrongPassword(length = 12) {
 
   // Convert the array to a string and return
   const passwordString = password.join("");
-  console.log(passwordString);
-  return await Password.toHash(passwordString);
+  const hashedPassword = await Password.toHash(passwordString);
+  return { hashedPassword, passwordString };
 }

@@ -69,3 +69,41 @@ export const EMERGENCY_LIST_EMAIL = `<div style="margin: 0; padding: 0; font-fam
                     </tr>
                 </table>
 </div>`;
+
+export const COMPANY_LOGIN_DETAIL_TEMPLATE = `<div style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <div style="background-color: #ffffff; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd;">
+        <h2 style="color: #333; text-align: center;">Welcome to GateKipa</h2>
+        <p style="color: #555; line-height: 1.5;">
+            Dear {{companyName}},
+        </p>
+        <p style="color: #555; line-height: 1.5;">
+            Your credentials has been generated automatically for you to access GateKipa. Below are your login details:
+        </p>
+        <table style="width: 100%; margin-top: 20px;">
+            <tr>
+                <td style="color: #333; padding: 10px; background-color: #f9f9f9;">Email Address:</td>
+                <td style="color: #333; padding: 10px; background-color: #f9f9f9;">{{companyEmail}}</td>
+            </tr>
+            <tr>
+                <td style="color: #333; padding: 10px; background-color: #f1f1f1;">Password:</td>
+                <td style="color: #333; padding: 10px; background-color: #f1f1f1;">{{password}}</td>
+            </tr>
+        </table>
+        <p style="color: #555; line-height: 1.5; margin-top: 20px;">
+            Please change your password upon first login for security purposes.
+        </p>
+        <p style="color: #555; line-height: 1.5;">
+            You can log in using the following link:
+        </p>
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="{{loginURL}}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 4px;">Sign In GateKipa</a>
+        </p>
+        <p style="color: #555; line-height: 1.5; margin-top: 20px;">
+            If you have any questions or need assistance, feel free to reach out to our support team.
+        </p>
+        <p style="color: #555; line-height: 1.5;">
+            Best regards,<br>
+            GateKipa Team
+        </p>
+    </div>
+</div>`;
