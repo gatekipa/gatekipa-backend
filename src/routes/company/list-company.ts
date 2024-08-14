@@ -44,7 +44,10 @@ router.get("/api/company/:companyId", async (req: Request, res: Response) => {
 
 router.get("/api/company/", async (req: Request, res: Response) => {
   try {
-    const companies = await Company.find()
+    const companies = await Company.find({
+      isSubscriptionActive: true,
+      companyPlanSubscription: { $ne: null },
+    })
       .select("_id companyCode name emailAddress")
       .sort({ createdAt: -1 });
 

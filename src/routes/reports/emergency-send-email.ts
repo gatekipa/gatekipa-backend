@@ -6,6 +6,7 @@ import { EmployeeVisit } from "../../models/EmployeeVisits";
 import { EMERGENCY_LIST_EMAIL } from "../../services/email-templates";
 import { sendManyEmail } from "../../services/mailer";
 import { Company } from "../../models/Company";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -25,7 +26,11 @@ router.post(
           );
       }
 
-      const company = await Company.findOne({ _id: companyId });
+      const company = await Company.findOne({
+        _id: new mongoose.Types.ObjectId(companyId),
+        isSubscriptionActive: true,
+        companyPlanSubscription: { $ne: null },
+      });
 
       if (!company) {
         return res
@@ -33,7 +38,7 @@ router.post(
           .send(
             new ApiResponseDto(
               true,
-              "Company not found with provided information",
+              "No active subscription company found with provided information",
               [],
               404
             )
@@ -49,20 +54,68 @@ router.post(
       let data = [];
       let toEmailAddress: string[] = [];
       if (type.trim().toLowerCase() === "employee") {
-        data = await EmployeeVisit.find({
-          $and: [{ checkInTime: { $ne: null } }, { checkOutTime: null }],
-        }).populate({
-          path: "employee",
-          select: "emailAddress",
-        });
+        data = await EmployeeVisit.aggregate([
+          {
+            $match: {
+              $and: [{ checkInTime: { $ne: null } }, { checkOutTime: null }],
+            },
+          },
+          {
+            $lookup: {
+              from: "employee",
+              localField: "employee",
+              foreignField: "_id",
+              as: "employeeData",
+            },
+          },
+          {
+            $unwind: "$employeeData",
+          },
+          {
+            $match: {
+              "employeeData.companyId": new mongoose.Types.ObjectId(companyId),
+            },
+          },
+          {
+            $project: {
+              employee: {
+                emailAddress: "$employeeData.emailAddress",
+              },
+            },
+          },
+        ]);
         toEmailAddress = data.map((item: any) => item.employee.emailAddress);
       } else if (type.trim().toLowerCase() === "visitor") {
-        data = await Visits.find({
-          $and: [{ checkInTime: { $ne: null } }, { checkOutTime: null }],
-        }).populate({
-          path: "visitor",
-          select: "emailAddress",
-        });
+        data = await Visits.aggregate([
+          {
+            $match: {
+              $and: [{ checkInTime: { $ne: null } }, { checkOutTime: null }],
+            },
+          },
+          {
+            $lookup: {
+              from: "visitor",
+              localField: "visitor",
+              foreignField: "_id",
+              as: "visitorData",
+            },
+          },
+          {
+            $unwind: "$visitorData",
+          },
+          {
+            $match: {
+              "visitorData.companyId": new mongoose.Types.ObjectId(companyId),
+            },
+          },
+          {
+            $project: {
+              visitor: {
+                emailAddress: "$visitorData.emailAddress",
+              },
+            },
+          },
+        ]);
         toEmailAddress = data.map((item: any) => item.visitor.emailAddress);
       } else {
         return res
@@ -80,6 +133,19 @@ router.post(
       // * Making emails unique to avoid sending multiple emails.
       toEmailAddress = Array.from(new Set(toEmailAddress));
 
+      if (toEmailAddress.length === 0) {
+        return res
+          .status(200)
+          .send(
+            new ApiResponseDto(
+              false,
+              "No email addresses found to send email",
+              [],
+              200
+            )
+          );
+      }
+
       const emailContent = EMERGENCY_LIST_EMAIL.replace(
         "{{companyName}}",
         company.name
@@ -90,7 +156,6 @@ router.post(
         .replace("{{companyEmail}}", company.emailAddress);
 
       await sendManyEmail(toEmailAddress, subject, emailContent);
-      console.log(`Email sent to ${toEmailAddress}`);
 
       return res
         .status(200)

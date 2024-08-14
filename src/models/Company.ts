@@ -43,11 +43,11 @@ const companySchema = new mongoose.Schema(
     },
     nextPaymentDate: {
       type: Date,
-      required: true,
+      required: false,
     },
     lastPaymentDate: {
       type: Date,
-      required: true,
+      required: false,
     },
     stripeCustomerId: {
       type: String,

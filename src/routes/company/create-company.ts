@@ -99,9 +99,10 @@ router.post("/api/company", async (req: Request, res: Response) => {
       mobileNo,
       address,
       isSubscriptionActive: false,
-      lastPaymentDate: new Date(),
-      nextPaymentDate: new Date(),
+      lastPaymentDate: null,
+      nextPaymentDate: null,
       stripeCustomerId,
+      companyPlanSubscription: null,
     });
 
     await CompanyCounter.create({
