@@ -35,24 +35,13 @@ import { emergencySendEmailRouter } from "./routes/reports/emergency-send-email"
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { verifyEmailTokenRouter } from "./routes/auth/verify-email-token";
 import { listPlanRouter } from "./routes/plan/list-plan";
+import { subscribePlanRouter } from "./routes/subscription/subscribe-plan";
 
 const dotenv = require("dotenv").config();
 
 const app = express();
-
 app.use(cookieParser());
-
 app.use(json());
-// app.set("trust proxy", true);
-// app.use(
-//   cookieSession({
-//     signed: false,
-//     secure: process.env.NODE_ENV !== "development",
-//     name: "gatekipa-app-session",
-//     httpOnly: true,
-//     sameSite: "none",
-//   })
-// );
 
 const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
@@ -95,6 +84,7 @@ app.use(visitorsVisitReportRouter);
 app.use(verifyEmailRouter);
 app.use(verifyEmailTokenRouter);
 app.use(listPlanRouter);
+app.use(subscribePlanRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

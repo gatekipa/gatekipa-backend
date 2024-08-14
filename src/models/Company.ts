@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 interface ICompany {
   name: string;
@@ -12,7 +12,7 @@ interface ICompany {
   lastPaymentDate: Date | null;
   companyCode: string;
   address: string;
-  companyPlanSubscription: string;
+  plan: ObjectId | null;
 }
 
 const companySchema = new mongoose.Schema(
@@ -61,10 +61,10 @@ const companySchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    companyPlanSubscription: {
+    plan: {
       required: false,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "companyPlanSubscription",
+      ref: "plan",
     },
   },
   {

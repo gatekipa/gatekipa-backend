@@ -154,10 +154,6 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       process.env.JWT_KEY
     );
 
-    // req.session.jwt = token;
-    // req.user
-    // * ===========================
-
     const response = new ApiResponseDto(
       false,
       `User sign up successfully!`,

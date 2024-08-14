@@ -13,7 +13,13 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
 
     // * Check if user exist for provided email.
     const existingUser = await AppUser.find({ emailAddress }).populate([
-      { path: "companyId" },
+      {
+        path: "companyId",
+        populate: {
+          path: "plan",
+          select: "_id planName",
+        },
+      },
     ]);
 
     // * If user does not exist, tell user to sign up first.
@@ -66,6 +72,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     // * ===========================
 
     // * If password is correct, login user.
+    console.log(existingUser[0]);
     const response = new ApiResponseDto(
       false,
       `User logged in successfully`,

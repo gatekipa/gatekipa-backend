@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 interface ICompanyPlanSubscription {
-  plan: string;
-  company: string;
+  plan: ObjectId;
+  company: ObjectId;
   status: "SUBSCRIBED" | "UNSUBSCRIBED";
-  createdBy: string;
-  updatedBy?: string;
+  createdBy: ObjectId;
+  updatedBy?: ObjectId;
 }
 
 const companyPlanSubscriptionSchema = new mongoose.Schema(
