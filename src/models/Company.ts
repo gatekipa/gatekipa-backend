@@ -7,11 +7,12 @@ interface ICompany {
   emailAddress: string;
   mobileNo: string;
   isSubscriptionActive: boolean;
-  nextPaymentDate: Date;
+  nextPaymentDate: Date | null;
   stripeCustomerId: string;
-  lastPaymentDate: Date;
+  lastPaymentDate: Date | null;
   companyCode: string;
   address: string;
+  companyPlanSubscription: string;
 }
 
 const companySchema = new mongoose.Schema(
@@ -59,6 +60,11 @@ const companySchema = new mongoose.Schema(
     address: {
       required: true,
       type: String,
+    },
+    companyPlanSubscription: {
+      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "companyPlanSubscription",
     },
   },
   {

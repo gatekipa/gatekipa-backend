@@ -13,6 +13,7 @@ interface IAppUser {
   employeeId?: string;
   companyId: string;
   visitorId?: string;
+  isEmailVerified: boolean;
 }
 
 const appUserSchema = new mongoose.Schema(
@@ -42,6 +43,10 @@ const appUserSchema = new mongoose.Schema(
       required: true,
     },
     isActive: {
+      type: Boolean,
+      required: true,
+    },
+    isEmailVerified: {
       type: Boolean,
       required: true,
     },

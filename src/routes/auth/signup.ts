@@ -18,6 +18,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       mobileNo,
       companyId,
       userType,
+      isEmailVerified,
     } = req.body;
 
     let newUser = null;
@@ -72,6 +73,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           companyId,
           visitorId: null,
           employeeId: null,
+          isEmailVerified,
         });
 
         // * Add employee id to user
@@ -96,6 +98,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           companyId,
           visitorId: null,
           employeeId: null,
+          isEmailVerified,
         });
 
         const newVisitor = await Visitor.create({
@@ -125,6 +128,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           companyId,
           visitorId: existingVisitor[0]._id,
           employeeId: null,
+          isEmailVerified,
         });
       }
     } else {
@@ -157,7 +161,13 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
     const response = new ApiResponseDto(
       false,
       `User sign up successfully!`,
-      { emailAddress, firstName, lastName, userType: newUser.userType },
+      {
+        emailAddress,
+        firstName,
+        lastName,
+        userType: newUser.userType,
+        isEmailVerified: newUser.isEmailVerified,
+      },
       201
     );
     res.status(201).send(response);

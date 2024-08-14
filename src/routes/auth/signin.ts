@@ -12,7 +12,9 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     const { emailAddress, password } = req.body;
 
     // * Check if user exist for provided email.
-    const existingUser = await AppUser.find({ emailAddress });
+    const existingUser = await AppUser.find({ emailAddress }).populate([
+      { path: "companyId" },
+    ]);
 
     // * If user does not exist, tell user to sign up first.
     if (!existingUser || existingUser.length === 0) {
@@ -27,20 +29,6 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
           )
         );
     }
-
-    // // * Check if user is already logged in
-    // if (existingUser[0].isLoggedIn) {
-    //   return res
-    //     .status(400)
-    //     .send(
-    //       new ApiResponseDto(
-    //         true,
-    //         `User with email ${emailAddress} is already logged in`,
-    //         [],
-    //         400
-    //       )
-    //     );
-    // }
 
     // * If user exists, check if password is correct match
     const isPasswordCorrect = await Password.compare(
@@ -68,16 +56,6 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
       },
       process.env.JWT_KEY
     );
-    // req.user = {
-    //   firstName: existingUser[0].firstName,
-    //   lastName: existingUser[0].lastName,
-    //   fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
-    //   emailAddress,
-    //   userType: existingUser[0].userType,
-    //   companyId: existingUser[0].companyId,
-    //   appUserId: existingUser[0]._id,
-    // };
-    // req.session.jwt = token;
 
     res.cookie("jwt", token, {
       httpOnly: true,

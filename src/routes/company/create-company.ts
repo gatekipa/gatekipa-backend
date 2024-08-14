@@ -19,6 +19,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       emailAddress,
       mobileNo,
       address,
+      isEmailVerified,
     } = req.body;
 
     console.log(req.body);
@@ -58,7 +59,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       ownerLastName,
       mobileNo,
       address,
-      isSubscriptionActive: true,
+      isSubscriptionActive: false,
       lastPaymentDate: new Date(),
       nextPaymentDate: new Date(),
       stripeCustomerId: "testId_123131313",
@@ -81,6 +82,7 @@ router.post("/api/company", async (req: Request, res: Response) => {
       userType: UserType.ADMIN,
       visitorId: null,
       password: await generateStrongPassword(8),
+      isEmailVerified,
     });
 
     return res
