@@ -12,18 +12,16 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     const { emailAddress, password } = req.body;
 
     // * Check if user exist for provided email.
-    const existingUser = await AppUser.find({ emailAddress }).populate([
-      {
-        path: "companyId",
-        populate: {
-          path: "plan",
-          select: "_id planName",
-        },
+    const existingUser = await AppUser.findOne({ emailAddress }).populate({
+      path: "companyId",
+      populate: {
+        path: "plan",
+        select: "_id planName",
       },
-    ]);
+    });
 
     // * If user does not exist, tell user to sign up first.
-    if (!existingUser || existingUser.length === 0) {
+    if (!existingUser) {
       return res
         .status(400)
         .send(
@@ -38,7 +36,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
 
     // * If user exists, check if password is correct match
     const isPasswordCorrect = await Password.compare(
-      existingUser[0].password,
+      existingUser?.password,
       password
     );
 
@@ -52,13 +50,13 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     // * Generate a JWT Token for User
     const token = jwt.sign(
       {
-        firstName: existingUser[0].firstName,
-        lastName: existingUser[0].lastName,
-        fullName: `${existingUser[0].firstName} ${existingUser[0].lastName}`,
+        firstName: existingUser?.firstName,
+        lastName: existingUser?.lastName,
+        fullName: `${existingUser?.firstName} ${existingUser?.lastName}`,
         emailAddress,
-        userType: existingUser[0].userType,
-        companyId: existingUser[0].companyId,
-        appUserId: existingUser[0]._id,
+        userType: existingUser?.userType,
+        companyId: existingUser?.companyId,
+        appUserId: existingUser?._id,
       },
       process.env.JWT_KEY
     );
@@ -72,24 +70,29 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
     // * ===========================
 
     // * If password is correct, login user.
-    console.log(existingUser[0]);
+
+    console.log("existingUser?.companyId :>> ", existingUser?.companyId);
+    console.log(existingUser);
     const response = new ApiResponseDto(
       false,
       `User logged in successfully`,
       {
-        id: existingUser[0]._id,
+        id: existingUser?._id,
         emailAddress,
-        firstName: existingUser[0].firstName,
-        lastName: existingUser[0].lastName,
-        userType: existingUser[0].userType,
-        visitorId: existingUser[0].visitorId,
-        companyId: existingUser[0].companyId,
-        employeeId: existingUser[0].employeeId,
+        firstName: existingUser?.firstName,
+        lastName: existingUser?.lastName,
+        userType: existingUser?.userType,
+        visitorId: existingUser?.visitorId,
+        companyId: existingUser?.companyId,
+        // @ts-ignore
+        companyId: existingUser?.companyId._id,
+        planInfo: existingUser?.companyId,
+        employeeId: existingUser?.employeeId,
       },
       200
     );
 
-    await AppUser.findByIdAndUpdate(existingUser[0]._id, { isLoggedIn: true });
+    await AppUser.findByIdAndUpdate(existingUser?._id, { isLoggedIn: true });
     res.status(200).send(response);
   } catch (error) {
     const response = new ApiResponseDto(true, error.message, [], 500);
