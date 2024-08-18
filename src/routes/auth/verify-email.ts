@@ -5,6 +5,7 @@ import { UserTempToken } from "../../models/UserTempToken";
 import { EventType } from "../../common/enums";
 import { sendEmail } from "../../services/mailer";
 import { EMAIL_VERIFICATION_TEMPLATE } from "../../services/email-templates";
+import { AppUser } from "models/AppUser";
 
 const router = express.Router();
 
@@ -14,6 +15,21 @@ router.post("/api/users/verify-email", async (req: Request, res: Response) => {
     const { emailAddress } = req.body;
 
     let newToken = ``;
+
+    const existingUser = await AppUser.find({ emailAddress });
+
+    if (existingUser && existingUser.length > 0) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(
+            true,
+            `User already exist with provided email: ${emailAddress}`,
+            [],
+            400
+          )
+        );
+    }
 
     const existingToken = await UserTempToken.findOne({
       domain: emailAddress,
