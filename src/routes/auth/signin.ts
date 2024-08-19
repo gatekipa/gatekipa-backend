@@ -34,6 +34,14 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
         );
     }
 
+    if (!existingUser.isActive) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(true, `User has been marked inactive`, [], 400)
+        );
+    }
+
     // * If user exists, check if password is correct match
     const isPasswordCorrect = await Password.compare(
       existingUser?.password,
