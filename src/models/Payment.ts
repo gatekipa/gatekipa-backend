@@ -15,7 +15,7 @@ const paymentSchema = new mongoose.Schema(
     },
     discount: {
       type: Number,
-      required: true,
+      required: false,
     },
     stripePaymentIntent: {
       type: Object,
