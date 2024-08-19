@@ -1,8 +1,8 @@
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
-import { Visits } from "../../models/Visits";
-import { Invoice } from "models/Invoice";
+import { Invoice } from "../../models/Invoice";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -21,7 +21,9 @@ router.get(
           );
       }
 
-      const invoices = await Invoice.find({ company: companyId }).sort({
+      const invoices = await Invoice.find({
+        company: new mongoose.Types.ObjectId(companyId),
+      }).sort({
         createdAt: -1,
       });
 
