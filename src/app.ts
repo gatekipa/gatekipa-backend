@@ -40,6 +40,8 @@ import { confirmPaymentRouter } from "./routes/subscription/confirm-payment";
 import { listInvoiceRouter } from "./routes/invoice/list-invoice";
 import { listCompanyUsersRouter } from "./routes/user-management/list-company-users";
 import { changeUserStatusRouter } from "./routes/user-management/change-user-status";
+import { getUserInfoRouter } from "./routes/profile/get-info";
+import { updateUserInfoRouter } from "./routes/profile/update-info";
 
 const dotenv = require("dotenv").config();
 
@@ -93,6 +95,8 @@ app.use(confirmPaymentRouter);
 app.use(listInvoiceRouter);
 app.use(listCompanyUsersRouter);
 app.use(changeUserStatusRouter);
+app.use(getUserInfoRouter);
+app.use(updateUserInfoRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");
