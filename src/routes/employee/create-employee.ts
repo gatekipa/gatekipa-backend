@@ -5,7 +5,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { generateEmployeeNo } from "../../services/employee";
 import { Shift } from "../../models/Shift";
-import uploadToImageKit from "services/file-uploader";
+import uploadToImageKit from "../../services/file-uploader";
 
 const router = express.Router();
 
