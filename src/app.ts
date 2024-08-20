@@ -44,6 +44,7 @@ import { changeUserStatusRouter } from "./routes/user-management/change-user-sta
 import { getUserInfoRouter } from "./routes/profile/get-info";
 import { updateUserInfoRouter } from "./routes/profile/update-info";
 import ImageKit from "imagekit";
+import uploadToImageKit from "services/file-uploader";
 
 const dotenv = require("dotenv").config();
 
@@ -65,24 +66,9 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.post("/api/upload/image", upload.single("avatar"), async (req, res) => {
-  const imagekit = new ImageKit({
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
-  });
+  const url = await uploadToImageKit(req.file.buffer, req.file.originalname);
 
-  const response = await imagekit
-    .upload({
-      file: req.file.buffer,
-      fileName: req.file.originalname,
-      folder: `avatars`,
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  // @ts-ignore
-  return res.json({ url: response.url });
+  return res.json({ url });
 });
 
 app.use(signupRouter);
