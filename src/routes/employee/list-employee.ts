@@ -19,6 +19,7 @@ router.get(
           );
       }
 
+      console.log("In Here :>> ");
       const { companyId } = req?.user;
 
       const { mobileNo, emailAddress, employeeNo } = req.query;

@@ -5,6 +5,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { generateEmployeeNo } from "../../services/employee";
 import { Shift } from "../../models/Shift";
+import uploadToImageKit from "services/file-uploader";
 
 const router = express.Router();
 
@@ -86,6 +87,9 @@ router.post(
       }
 
       const newEmployeeNo = await generateEmployeeNo(companyId, employeeNo);
+
+      const avatar = uploadToImageKit(req.file.buffer, req.file.originalname);
+      console.log("avatar :>> ", avatar);
 
       const newEmployee = await Employee.create({
         emailAddress,

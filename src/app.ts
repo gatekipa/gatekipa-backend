@@ -1,4 +1,3 @@
-import { json } from "body-parser";
 import express from "express";
 import "express-async-errors";
 import cookieParser from "cookie-parser";
@@ -43,14 +42,13 @@ import { listCompanyUsersRouter } from "./routes/user-management/list-company-us
 import { changeUserStatusRouter } from "./routes/user-management/change-user-status";
 import { getUserInfoRouter } from "./routes/profile/get-info";
 import { updateUserInfoRouter } from "./routes/profile/update-info";
-import ImageKit from "imagekit";
-import uploadToImageKit from "services/file-uploader";
+import uploadToImageKit from "../src/services/file-uploader";
 
 const dotenv = require("dotenv").config();
 
 const app = express();
 app.use(cookieParser());
-app.use(json());
+app.use(express.json());
 
 const corsOptions: CorsOptions = {
   origin: `${process.env.ALLOWED_FRONTEND_ORIGIN}`,
@@ -63,7 +61,7 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+export const upload = multer({ storage: storage });
 
 app.post("/api/upload/image", upload.single("avatar"), async (req, res) => {
   const url = await uploadToImageKit(req.file.buffer, req.file.originalname);
@@ -87,7 +85,7 @@ app.use(createVisitRouter);
 app.use(checkInVisitRouter);
 app.use(checkOutVisitRouter);
 app.use(listEmployeeRouter);
-app.use(createEmployeeRouter);
+app.use(upload.single("avatar"), createEmployeeRouter);
 app.use(employeeStatusRouter);
 app.use(listShiftRouter);
 app.use(createShiftRouter);
