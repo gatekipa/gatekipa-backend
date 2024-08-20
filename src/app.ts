@@ -2,6 +2,7 @@ import { json } from "body-parser";
 import express from "express";
 import "express-async-errors";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 
 import cors, { CorsOptions } from "cors";
 import { listCompanyRouter } from "./routes/company/list-company";
@@ -42,6 +43,7 @@ import { listCompanyUsersRouter } from "./routes/user-management/list-company-us
 import { changeUserStatusRouter } from "./routes/user-management/change-user-status";
 import { getUserInfoRouter } from "./routes/profile/get-info";
 import { updateUserInfoRouter } from "./routes/profile/update-info";
+import ImageKit from "imagekit";
 
 const dotenv = require("dotenv").config();
 
@@ -58,6 +60,30 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.post("/api/upload/image", upload.single("avatar"), async (req, res) => {
+  const imagekit = new ImageKit({
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+  });
+
+  const response = await imagekit
+    .upload({
+      file: req.file.buffer,
+      fileName: req.file.originalname,
+      folder: `avatars`,
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  // @ts-ignore
+  return res.json({ url: response.url });
+});
 
 app.use(signupRouter);
 app.use(listCompanyRouter);
