@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { Employee } from "../../models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get(
 
       const { mobileNo, emailAddress, employeeNo } = req.query;
 
-      const filter: any = { companyId };
+      const filter: any = { companyId: new mongoose.Types.ObjectId(companyId) };
       if (mobileNo) {
         filter.mobileNo = { $regex: mobileNo };
       }

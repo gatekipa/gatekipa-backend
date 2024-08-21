@@ -2,6 +2,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { Shift } from "../../models/Shift";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -20,7 +21,10 @@ router.get(
           );
       }
 
-      const shifts = await Shift.find({ companyId, _id: shiftId });
+      const shifts = await Shift.find({
+        companyId,
+        _id: new mongoose.Types.ObjectId(shiftId),
+      });
       return res
         .status(shifts && shifts.length > 0 ? 200 : 404)
         .send(
@@ -60,7 +64,9 @@ router.get("/api/shift", requireAuth, async (req: Request, res: Response) => {
         );
     }
 
-    const shifts = await Shift.find({ companyId });
+    const shifts = await Shift.find({
+      companyId: new mongoose.Types.ObjectId(companyId),
+    });
     return res
       .status(200)
       .send(
