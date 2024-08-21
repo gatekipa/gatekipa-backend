@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import express, { Request, Response } from "express";
 import { Employee } from "../../models/Employee";
 import { ApiResponseDto } from "../../dto/api-response.dto";
@@ -54,7 +54,7 @@ router.post(
           );
       }
 
-      const shift = await Shift.findById(shiftId);
+      const shift = await Shift.findById(new mongoose.Types.ObjectId(shiftId));
       if (!shift) {
         return res
           .status(404)

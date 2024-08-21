@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { CompanyCounter } from "../models/CompanyCounter";
 import { Employee } from "../models/Employee";
 
@@ -14,7 +15,7 @@ export async function generateEmployeeNo(
     // Check if the employeeNo already exists for the given company
     const existingEmployee = await Employee.findOne({
       employeeNo,
-      companyId,
+      companyId: new mongoose.Types.ObjectId(companyId),
     });
 
     if (existingEmployee) {
@@ -30,7 +31,7 @@ export async function generateEmployeeNo(
   const options = { new: true, upsert: true };
 
   const counter = await CompanyCounter.findOneAndUpdate(
-    { companyId },
+    { companyId: new mongoose.Types.ObjectId(companyId) },
     update,
     options
   );
@@ -44,7 +45,7 @@ export async function generateEmployeeNo(
   // Ensure the new employee number is unique (recursive call if necessary)
   const existingEmployee = await Employee.findOne({
     employeeNo: newEmployeeNo,
-    companyId,
+    companyId: new mongoose.Types.ObjectId(companyId),
   });
 
   if (existingEmployee) {
