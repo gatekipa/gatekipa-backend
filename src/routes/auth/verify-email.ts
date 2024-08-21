@@ -5,7 +5,7 @@ import { UserTempToken } from "../../models/UserTempToken";
 import { EventType } from "../../common/enums";
 import { sendEmail } from "../../services/mailer";
 import { EMAIL_VERIFICATION_TEMPLATE } from "../../services/email-templates";
-import { AppUser } from "models/AppUser";
+import { AppUser } from "../../models/AppUser";
 
 const router = express.Router();
 
