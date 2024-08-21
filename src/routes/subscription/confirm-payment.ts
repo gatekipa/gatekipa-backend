@@ -50,18 +50,32 @@ router.post(
         stripePaymentIntent: stripePayment,
       });
 
-      // * Generate an invoice for the payment made
-      const invoice = await Invoice.create({
-        amount: payableAmount,
+      // * Check for existing invoice with UNPAID OR OVERDUE status else generate an invoice for the payment made
+      const existingInvoice = await Invoice.findOne({
         company: company._id,
-        invoiceDate: new Date(),
-        invoiceNo: "INV-" + Date.now(),
-        invoiceStatus: "PAID",
-        payment: payment._id,
+        invoiceStatus: {
+          $in: ["UNPAID", "OVERDUE"],
+        },
       });
 
+      if (existingInvoice) {
+        await Invoice.findByIdAndUpdate(existingInvoice._id, {
+          payment: payment._id,
+          invoiceStatus: "PAID",
+        });
+      } else {
+        await Invoice.create({
+          amount: payableAmount,
+          company: company._id,
+          invoiceDate: new Date(),
+          invoiceNo: "INV-" + Date.now(),
+          invoiceStatus: "PAID",
+          payment: payment._id,
+        });
+      }
+
       // * Create a compnay plan subscription entry
-      const companyPlanSubscription = await CompanyPlanSubscription.create({
+      await CompanyPlanSubscription.create({
         company: company._id,
         createdBy: appUserId,
         plan: new mongoose.Types.ObjectId(planId),
@@ -69,14 +83,19 @@ router.post(
       });
 
       // * Update the company's plan and subscription status
-
+      const today = new Date();
+      const nextPaymentDate = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        today.getDate()
+      );
       const updatedCompany = await Company.findByIdAndUpdate(
         company._id,
         {
-          plan: planId,
+          plan: new mongoose.Types.ObjectId(planId),
           isSubscriptionActive: true,
-          lastPaymentDate: new Date(),
-          nextPaymentDate: new Date(),
+          lastPaymentDate: today,
+          nextPaymentDate,
         },
         { new: true }
       );

@@ -43,6 +43,7 @@ import { changeUserStatusRouter } from "./routes/user-management/change-user-sta
 import { getUserInfoRouter } from "./routes/profile/get-info";
 import { updateUserInfoRouter } from "./routes/profile/update-info";
 import uploadToImageKit from "../src/services/file-uploader";
+import { paymentSettlementRouter } from "./routes/cron-jobs/payment-settlement";
 
 const dotenv = require("dotenv").config();
 
@@ -107,6 +108,7 @@ app.use(listCompanyUsersRouter);
 app.use(changeUserStatusRouter);
 app.use(getUserInfoRouter);
 app.use(updateUserInfoRouter);
+app.use(paymentSettlementRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

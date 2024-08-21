@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { ApiResponseDto } from "../../dto/api-response.dto";
-import { Company } from "models/Company";
+import { Company } from "../../models/Company";
+import { Plan } from "../../models/Plan";
+import { Invoice } from "../../models/Invoice";
 
 const router = express.Router();
 
@@ -15,10 +17,22 @@ router.post(
 
       if (expiredSubscriptions && expiredSubscriptions.length > 0) {
         for (const subscription of expiredSubscriptions) {
+          const today = new Date();
+          // * Get the subscription's plan.
+          const plan = await Plan.findById(subscription.plan);
+          // * Generate a new invoice for expired subscription with the plan's amount.
+          await Invoice.create({
+            amount: plan.price,
+            company: subscription._id,
+            invoiceDate: today,
+            invoiceNo: "INV-" + Date.now(),
+            invoiceStatus: "UNPAID",
+            payment: null,
+          });
+
+          // * Update the subscription status to "INACTIVE"
           await Company.findByIdAndUpdate(subscription._id, {
             isSubscriptionActive: false,
-            nextPaymentDate: null,
-            lastPaymentDate: null,
           });
         }
       }
@@ -30,7 +44,7 @@ router.post(
           new ApiResponseDto(
             false,
             "Settlement processing completed successfully",
-            [],
+            { processed: true },
             200
           )
         );
