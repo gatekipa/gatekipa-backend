@@ -2,6 +2,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { Visitor } from "../../models/Visitor";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get("/api/visitor", requireAuth, async (req: Request, res: Response) => {
 
     const { mobileNo, emailAddress } = req.query;
 
-    const filter: any = { companyId };
+    const filter: any = { companyId: new mongoose.Types.ObjectId(companyId) };
     if (mobileNo) {
       filter.mobileNo = { $regex: mobileNo };
     }
