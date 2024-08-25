@@ -36,6 +36,10 @@ const employeeSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    avatar: {
+      type: String,
+      required: false,
+    },
     payrollPeriodEndDate: {
       type: Date,
       required: true,

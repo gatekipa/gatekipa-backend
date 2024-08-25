@@ -88,7 +88,10 @@ router.post(
 
       const newEmployeeNo = await generateEmployeeNo(companyId, employeeNo);
 
-      const avatar = uploadToImageKit(req.file.buffer, req.file.originalname);
+      const avatar = await uploadToImageKit(
+        req.file.buffer,
+        req.file.originalname
+      );
       console.log("avatar :>> ", avatar);
 
       const newEmployee = await Employee.create({
@@ -97,6 +100,7 @@ router.post(
         lastName,
         dateOfBirth,
         mobileNo,
+        avatar,
         employeeNo: newEmployeeNo,
         designation,
         isActive: true,
