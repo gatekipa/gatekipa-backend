@@ -44,6 +44,7 @@ import { getUserInfoRouter } from "./routes/profile/get-info";
 import { updateUserInfoRouter } from "./routes/profile/update-info";
 import uploadToImageKit from "../src/services/file-uploader";
 import { paymentSettlementRouter } from "./routes/cron-jobs/payment-settlement";
+import { editCompanyRouter } from "./routes/company/edit-company";
 
 const dotenv = require("dotenv").config();
 
@@ -70,6 +71,7 @@ app.post("/api/upload/image", upload.single("avatar"), async (req, res) => {
   return res.json({ url });
 });
 
+app.use(editCompanyRouter);
 app.use(signupRouter);
 app.use(listCompanyRouter);
 app.use(createCompanyRouter);
