@@ -8,7 +8,6 @@ const twilioConfig = {
   authToken: process.env.TWILIO_ACCOUNT_AUTH_TOKEN,
   phoneNumber: process.env.TWILIO_ACCOUNT_PHONE_NUMBER,
 };
-console.log(twilioConfig);
 
 const client = twilio(twilioConfig.accountSid, twilioConfig.authToken);
 
