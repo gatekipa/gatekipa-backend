@@ -14,6 +14,8 @@ interface IAppUser {
   companyId: string;
   visitorId?: string;
   isEmailVerified: boolean;
+  isMultiFactorAuthEnabled: boolean;
+  multiFactorAuthMediums: string[];
 }
 
 const appUserSchema = new mongoose.Schema(
@@ -48,6 +50,14 @@ const appUserSchema = new mongoose.Schema(
     },
     isEmailVerified: {
       type: Boolean,
+      required: true,
+    },
+    isMultiFactorAuthEnabled: {
+      type: Boolean,
+      required: true,
+    },
+    multiFactorAuthMediums: {
+      type: Array,
       required: true,
     },
     userType: {

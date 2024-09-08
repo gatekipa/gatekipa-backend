@@ -1,4 +1,4 @@
-import { EventType } from "../common/enums";
+import { EventType, DomainType } from "../common/enums";
 import mongoose from "mongoose";
 
 interface IUserTempToken {
@@ -6,7 +6,8 @@ interface IUserTempToken {
   token: string;
   isVerified: Boolean;
   expiryDate: Date;
-  eventType: String;
+  eventType: EventType;
+  domainType: DomainType;
 }
 
 const userTempTokenSchema = new mongoose.Schema(
@@ -28,6 +29,10 @@ const userTempTokenSchema = new mongoose.Schema(
       required: true,
     },
     eventType: {
+      type: String,
+      required: true,
+    },
+    domainType: {
       type: String,
       required: true,
     },

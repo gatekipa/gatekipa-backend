@@ -107,3 +107,30 @@ export const COMPANY_LOGIN_DETAIL_TEMPLATE = `<div style="font-family: Arial, sa
         </p>
     </div>
 </div>`;
+
+export const MULTIFACTOR_AUTH_CODE_EMAIL_TEMPLATE = `<div style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-collapse: collapse; border: 1px solid #e0e0e0;">
+        <tr>
+            <td style="background-color: #007bff; padding: 10px 20px; text-align: center;">
+                <h1 style="color: #ffffff; font-size: 24px; margin: 0;">Multi-Factor Authentication</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px;">
+                <p style="font-size: 16px; color: #333333; margin: 0 0 10px;">Hi {{FIRST_NAME}},</p>
+                <p style="font-size: 16px; color: #333333; margin: 0 0 20px;">There has been a login attempt to your account. Please use the following code to complete the login process.</p>
+                <div style="text-align: center; margin: 20px 0;">
+                    <span style="display: inline-block; background-color: #f8f9fa; padding: 15px 20px; font-size: 24px; font-weight: bold; color: #007bff; border: 1px solid #007bff; letter-spacing: 2px;">{{MFA_CODE}}</span>
+                </div>
+                <p style="font-size: 14px; color: #333333; margin: 0 0 10px;">If you did not request this code you can safely ignore this email but you should consider changing your password immediately.</p>
+                <p style="font-size: 14px; color: #333333; margin: 0 0 20px;">For your security, this code will expire in 15 minutes.</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8f9fa; padding: 10px 20px; text-align: center;">
+                <p style="font-size: 12px; color: #777777; margin: 0;">If you have any questions, contact our support team at <a href="mailto:support@gatekipas.com" style="color: #007bff; text-decoration: none;">support@gatekipas.com</a></p>
+                <p style="font-size: 12px; color: #777777; margin: 0;">&copy; 2024 GateKipa. All rights reserved.</p>
+            </td>
+        </tr>
+    </table>
+</div>`;

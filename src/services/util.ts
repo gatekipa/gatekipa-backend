@@ -1,10 +1,16 @@
 import { Password } from "./password";
 
-export function generateRandom6DigitNumber() {
+export function generateRandom6DigitNumber(): string {
   // Generate a random number between 100,000 and 999,999
   const randomNumber = Math.floor(Math.random() * 900000) + 100000;
   // Convert the number to a string and return it
   return randomNumber.toString();
+}
+
+export function getDate15MinsFromNow(): Date {
+  const currentDate = new Date();
+  const futureDate = new Date(currentDate.getTime() + 15 * 60 * 1000);
+  return futureDate;
 }
 
 export async function generateStrongPassword(length = 12) {

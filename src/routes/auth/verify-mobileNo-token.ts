@@ -1,20 +1,21 @@
 import express, { Request, Response } from "express";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { UserTempToken } from "../../models/UserTempToken";
-import { EventType } from "../../common/enums";
+import { DomainType, EventType } from "../../common/enums";
 
 const router = express.Router();
 
 router.post(
-  "/api/users/verify-email-token",
+  "/api/users/verify-mobileno-token",
   async (req: Request, res: Response) => {
     try {
       // * Get emailAddress from body
-      const { emailAddress, token } = req.body;
+      const { mobileNo, token } = req.body;
 
       const existingToken = await UserTempToken.findOne({
-        domain: emailAddress,
-        eventType: EventType.EMAIL_VERIFICATION,
+        domain: mobileNo,
+        domainType: DomainType.SMS,
+        eventType: EventType.MOBILENO_VERIFICATION,
         token,
         isVerified: false,
       });
@@ -25,7 +26,7 @@ router.post(
           .send(
             new ApiResponseDto(
               true,
-              `Code cannot be verified for email ${emailAddress}`,
+              `Code cannot be verified for mobile no ${mobileNo}`,
               [],
               400
             )
@@ -37,7 +38,9 @@ router.post(
           _id: existingToken._id,
         },
         {
-          isVerified: true,
+          $set: {
+            isVerified: true,
+          },
         }
       );
 
@@ -47,15 +50,15 @@ router.post(
           new ApiResponseDto(
             false,
             "Code verified successfully",
-            { emailAddress },
+            { mobileNo },
             200
           )
         );
     } catch (error) {
-      console.error("Error occurred in verify-email-token", error);
+      console.error("Error occurred in verify-mobileno-token", error);
       res.status(500).send(new ApiResponseDto(true, error.message, [], 500));
     }
   }
 );
 
-export { router as verifyEmailTokenRouter };
+export { router as verifyMobileNoTokenRouter };

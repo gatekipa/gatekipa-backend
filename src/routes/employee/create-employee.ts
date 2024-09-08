@@ -68,18 +68,31 @@ router.post(
           );
       }
 
-      const existingUser = await Employee.find({
+      const existingUser = await Employee.findOne({
         emailAddress,
         companyId: new Types.ObjectId(companyId),
       });
 
-      if (existingUser && existingUser.length > 0) {
+      if (existingUser) {
         return res
           .status(400)
           .send(
             new ApiResponseDto(
               true,
               `Employee with email address ${emailAddress} already exists`,
+              [],
+              400
+            )
+          );
+      }
+
+      if (existingUser.mobileNo === mobileNo) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              `Employee with mobile number ${mobileNo} already exists`,
               [],
               400
             )

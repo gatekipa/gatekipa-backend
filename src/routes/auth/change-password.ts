@@ -43,7 +43,8 @@ router.post(
       );
 
       // * logging out the current user.
-      req.session = null;
+      req.user = null;
+      res.clearCookie("jwt");
 
       // * Return response.
       return res

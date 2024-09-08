@@ -17,6 +17,7 @@ router.post(
         isLoggedIn: false,
       });
     }
+    res.clearCookie("jwt");
     req.user = null;
     res.status(200).send(new ApiResponseDto(false, "Logout Success", [], 200));
   }

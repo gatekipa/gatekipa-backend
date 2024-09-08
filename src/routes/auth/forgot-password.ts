@@ -3,7 +3,7 @@ import { AppUser } from "../../models/AppUser";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { generateRandom6DigitNumber } from "../../services/util";
 import { UserTempToken } from "../../models/UserTempToken";
-import { EventType } from "../../common/enums";
+import { DomainType, EventType } from "../../common/enums";
 import { sendEmail } from "../../services/mailer";
 
 const router = express.Router();
@@ -44,6 +44,7 @@ router.post(
         expiryDate,
         isVerified: false,
         token: newToken,
+        domainType: DomainType.EMAIL,
       });
 
       await sendEmail(

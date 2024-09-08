@@ -45,6 +45,10 @@ import { updateUserInfoRouter } from "./routes/profile/update-info";
 import uploadToImageKit from "../src/services/file-uploader";
 import { paymentSettlementRouter } from "./routes/cron-jobs/payment-settlement";
 import { editCompanyRouter } from "./routes/company/edit-company";
+import { listUserSettingsRouter } from "./routes/auth/settings/list-user-settings";
+import { updateUserSettingsRouter } from "./routes/auth/settings/update-user-settings";
+import { verifyMobileNoRouter } from "./routes/auth/verify-mobileNo";
+import { verifyMobileNoTokenRouter } from "./routes/auth/verify-mobileno-token";
 
 const dotenv = require("dotenv").config();
 
@@ -111,6 +115,10 @@ app.use(changeUserStatusRouter);
 app.use(getUserInfoRouter);
 app.use(updateUserInfoRouter);
 app.use(paymentSettlementRouter);
+app.use(listUserSettingsRouter);
+app.use(updateUserSettingsRouter);
+app.use(verifyMobileNoRouter);
+app.use(verifyMobileNoTokenRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

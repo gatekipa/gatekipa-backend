@@ -34,13 +34,23 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
     }
 
     // * Check if user already exist.
-    const existingUser = await AppUser.find({ emailAddress });
+    const existingUser = await AppUser.findOne({ emailAddress });
 
     // * If user already exists, throw error.
-    if (existingUser && existingUser.length > 0) {
+    if (existingUser) {
       const response = new ApiResponseDto(
         true,
         `User already exists with email: ${emailAddress}`,
+        [],
+        400
+      );
+      return res.status(400).send(response);
+    }
+
+    if (existingUser.mobileNo === mobileNo) {
+      const response = new ApiResponseDto(
+        true,
+        `User already exists with mobile no: ${mobileNo}`,
         [],
         400
       );
@@ -74,6 +84,8 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           visitorId: null,
           employeeId: null,
           isEmailVerified,
+          isMultiFactorAuthEnabled: false,
+          multiFactorAuthMediums: [],
         });
 
         // * Add employee id to user
@@ -99,6 +111,8 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           visitorId: null,
           employeeId: null,
           isEmailVerified,
+          isMultiFactorAuthEnabled: false,
+          multiFactorAuthMediums: [],
         });
 
         const newVisitor = await Visitor.create({
@@ -129,6 +143,8 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           visitorId: existingVisitor[0]._id,
           employeeId: null,
           isEmailVerified,
+          isMultiFactorAuthEnabled: false,
+          multiFactorAuthMediums: [],
         });
       }
     } else {
