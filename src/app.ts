@@ -48,7 +48,7 @@ import { editCompanyRouter } from "./routes/company/edit-company";
 import { listUserSettingsRouter } from "./routes/auth/settings/list-user-settings";
 import { updateUserSettingsRouter } from "./routes/auth/settings/update-user-settings";
 import { verifyMobileNoRouter } from "./routes/auth/verify-mobileNo";
-import { verifyMobileNoTokenRouter } from "./routes/auth/verify-mobileno-token";
+import { verifyMobileNoTokenRouter } from "./routes/auth/verify-mobileNo-token";
 
 const dotenv = require("dotenv").config();
 
