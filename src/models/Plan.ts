@@ -1,16 +1,18 @@
 import mongoose, { ObjectId } from "mongoose";
+import { IPromotionalPricingDto } from "../dto/plan/promotional-pricing.interface";
 
 interface IFeature {
-  title: string;
-  details: string[];
+  featureId: ObjectId;
 }
+
 interface IPlan {
   planName: string;
   price: number;
   subscriptionType: "MONTHLY" | "YEARLY";
+  isPromotionalPlan: boolean;
+  promotionalPricing: IPromotionalPricingDto[];
   description: string;
   isActive: boolean;
-  features: IFeature[];
   createdBy: ObjectId;
   updatedBy?: ObjectId;
 }
@@ -37,8 +39,12 @@ const planSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    features: {
+    promotionalPricing: {
       type: Array,
+      required: false,
+    },
+    isPromotionalPlan: {
+      type: Boolean,
       required: true,
     },
     createdBy: {

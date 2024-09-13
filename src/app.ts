@@ -49,6 +49,8 @@ import { listUserSettingsRouter } from "./routes/auth/settings/list-user-setting
 import { updateUserSettingsRouter } from "./routes/auth/settings/update-user-settings";
 import { verifyMobileNoRouter } from "./routes/auth/verify-mobileNo";
 import { verifyMobileNoTokenRouter } from "./routes/auth/verify-mobileNo-token";
+import { createPlanRouter } from "./routes/plan/create-plan";
+import { listFeatureRouter } from "./routes/features/list-feature";
 
 const dotenv = require("dotenv").config();
 
@@ -119,6 +121,8 @@ app.use(listUserSettingsRouter);
 app.use(updateUserSettingsRouter);
 app.use(verifyMobileNoRouter);
 app.use(verifyMobileNoTokenRouter);
+app.use(createPlanRouter);
+app.use(listFeatureRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");
