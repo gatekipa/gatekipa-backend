@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "66e4867e954cb3222af278b1"
+  },
+  "name": "Visitor Management",
+  "code": "VISITOR_MANAGEMENT",
+  "type": "MODULE",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e486ee954cb3222af278b2"
+  },
+  "name": "Admin Dashboard",
+  "code": "ADMIN_DASHBOARD",
+  "type": "MODULE",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e48781954cb3222af278b3"
+  },
+  "name": "Check-In/Check-Out",
+  "code": "CHECK_IN_CHECK_OUT",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e487dc954cb3222af278b4"
+  },
+  "name": "Digital Records",
+  "code": "DIGITAL_RECORDS",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e487fd954cb3222af278b5"
+  },
+  "name": "Email Notifications",
+  "code": "EMAIL_NOTIFICATIONS",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e4881a954cb3222af278b6"
+  },
+  "name": "Data Management",
+  "code": "DATA_MANAGEMENT",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e4882c954cb3222af278b7"
+  },
+  "name": "Reporting",
+  "code": "REPORTING",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e48842954cb3222af278b8"
+  },
+  "name": "User Management",
+  "code": "USER_MANAGEMENT",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e48870954cb3222af278ba"
+  },
+  "name": "Scheduled Visits",
+  "code": "SCHEDULED_VISITS",
+  "type": "PERMISSION",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "66e48884954cb3222af278bb"
+  },
+  "name": "Emergency List",
+  "code": "EMERGENCY_LIST",
+  "type": "PERMISSION",
+  "isActive": true
+}]
