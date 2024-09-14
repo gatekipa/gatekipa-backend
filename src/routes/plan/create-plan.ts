@@ -147,19 +147,17 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
 
     const createdPlanFeatures = newPlanFeatures.toObject();
 
-    return res
-      .status(200)
-      .send(
-        new ApiResponseDto(
-          false,
-          "Plan created successfully",
-          {
-            ...createdPlan,
-            assignedFeatures: createdPlanFeatures.assignedFeatures,
-          },
-          200
-        )
-      );
+    return res.status(201).send(
+      new ApiResponseDto(
+        false,
+        "Plan created successfully",
+        {
+          ...createdPlan,
+          assignedFeatures: createdPlanFeatures.assignedFeatures,
+        },
+        201
+      )
+    );
   } catch (error) {
     console.error("Error occurred during create-plan", error);
     return res

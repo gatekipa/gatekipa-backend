@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { Plan } from "../../models/Plan";
 import { ApiResponseDto } from "../../dto/api-response.dto";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { PlanFeatures } from "../../models/PlanFeatures";
+import { Plan } from "../../models/Plan";
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.get(
       const plans = await PlanFeatures.findOne({ plan: planId }).populate({
         path: "plan",
       });
+
       return res
         .status(200)
         .send(
@@ -36,7 +37,30 @@ router.get(
   }
 );
 
-router.get("/api/plan/", async (req: Request, res: Response) => {
+router.get("/api/plan/", requireAuth, async (req: Request, res: Response) => {
+  try {
+    const plans = await Plan.find({});
+    return res
+      .status(200)
+      .send(
+        new ApiResponseDto(false, "Plans fetched successfully", plans, 200)
+      );
+  } catch (error) {
+    console.error("Error occurred during list-plan", error);
+    return res
+      .status(500)
+      .send(
+        new ApiResponseDto(
+          true,
+          "Something wen't wrong while fetching plans",
+          [],
+          500
+        )
+      );
+  }
+});
+
+router.get("/api/pricing-plans/", async (req: Request, res: Response) => {
   try {
     const plans = await PlanFeatures.aggregate([
       {
@@ -49,6 +73,11 @@ router.get("/api/plan/", async (req: Request, res: Response) => {
       },
       {
         $unwind: "$plan",
+      },
+      {
+        $match: {
+          "plan.isActive": true,
+        },
       },
       {
         $addFields: {
