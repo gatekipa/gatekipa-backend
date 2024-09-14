@@ -11,7 +11,9 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const { type } = req.params;
-      const features = await Feature.find({ type, isActive: true });
+      const features = await Feature.find({ type, isActive: true }).select(
+        "_id name type"
+      );
       return res
         .status(200)
         .send(
@@ -43,7 +45,9 @@ router.get(
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const features = await Feature.find({ isActive: true });
+      const features = await Feature.find({ isActive: true }).select(
+        "_id name type"
+      );
       return res
         .status(200)
         .send(

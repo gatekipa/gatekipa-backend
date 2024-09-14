@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IFeature } from "../dto/plan/feature.interface";
+import { IFeature } from "./interfaces/feature.interface";
 
 const featureSchema = new mongoose.Schema(
   {

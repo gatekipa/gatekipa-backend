@@ -1,10 +1,13 @@
 import express, { Request, Response } from "express";
 import { Plan } from "../../models/Plan";
 import { ApiResponseDto } from "../../dto/api-response.dto";
-import { CreatePlanDto } from "../../dto/plan/create-plan.class";
+import { CreatePlanDto } from "../../dto/plan/create-plan.dto";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import mongoose from "mongoose";
 import { PlanFeatures } from "../../models/PlanFeatures";
+import { Feature } from "../../models/Feature";
+import { IAssignedFeature } from "../../models/interfaces/assigned-feature.interface";
+import { IFeatureDto } from "../../dto/plan/feature.dto";
 
 const router = express.Router();
 
@@ -72,6 +75,57 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
         );
     }
 
+    const features = await Feature.find({ isActive: true }).select(
+      "_id name code"
+    );
+    if (!features || features.length === 0) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(
+            true,
+            "No features found in setup. Please contact GateKipa support",
+            [],
+            400
+          )
+        );
+    }
+
+    const resolvedAssignedFeatures: IAssignedFeature[] = [];
+    for (const assignedFeature of assignedFeatures) {
+      const dbFeature = features.find(
+        (feature) => feature._id.toString() === assignedFeature.feature
+      );
+
+      let featureItem: IFeatureDto | null = null;
+
+      if (dbFeature) {
+        featureItem = {
+          name: dbFeature.name,
+          code: dbFeature.code,
+        };
+      }
+
+      let subFeatureItems: IFeatureDto[] = [];
+
+      for (const subFeature of assignedFeature.subFeature) {
+        features.map((feature) => {
+          if (feature._id.toString() === subFeature) {
+            subFeatureItems.push({
+              name: feature.name,
+              code: feature.code,
+            });
+          }
+        });
+      }
+      resolvedAssignedFeatures.push({
+        feature: featureItem,
+        subFeature: subFeatureItems,
+      });
+    }
+
+    console.log(resolvedAssignedFeatures);
+
     const newPlan = await Plan.create({
       planName: name,
       price,
@@ -83,16 +137,28 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
       createdBy: new mongoose.Types.ObjectId(appUserId),
     });
 
-    await PlanFeatures.create({
+    const createdPlan = newPlan.toObject();
+
+    const newPlanFeatures = await PlanFeatures.create({
       plan: new mongoose.Types.ObjectId(newPlan._id),
-      assignedFeatures,
+      assignedFeatures: resolvedAssignedFeatures,
       createdBy: new mongoose.Types.ObjectId(appUserId),
     });
+
+    const createdPlanFeatures = newPlanFeatures.toObject();
 
     return res
       .status(200)
       .send(
-        new ApiResponseDto(false, "Plan created successfully", newPlan, 200)
+        new ApiResponseDto(
+          false,
+          "Plan created successfully",
+          {
+            ...createdPlan,
+            assignedFeatures: createdPlanFeatures.assignedFeatures,
+          },
+          200
+        )
       );
   } catch (error) {
     console.error("Error occurred during create-plan", error);

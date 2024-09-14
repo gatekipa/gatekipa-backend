@@ -1,5 +1,5 @@
 import mongoose, { ObjectId } from "mongoose";
-import { IAssignedFeature } from "../dto/plan/assigned-feature.interface";
+import { IAssignedFeature } from "./interfaces/assigned-feature.interface";
 
 interface IPlanFeature {
   plan: ObjectId;
@@ -33,6 +33,13 @@ const planFeatureSchema = new mongoose.Schema(
   {
     timestamps: true,
     toJSON: {
+      transform(doc: any, ret: any) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+    toObject: {
       transform(doc: any, ret: any) {
         ret.id = ret._id;
         delete ret._id;

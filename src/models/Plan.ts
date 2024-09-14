@@ -1,5 +1,5 @@
 import mongoose, { ObjectId } from "mongoose";
-import { IPromotionalPricingDto } from "../dto/plan/promotional-pricing.interface";
+import { IPromotionalPricingDto } from "./interfaces/promotional-pricing.interface";
 
 interface IFeature {
   featureId: ObjectId;
@@ -61,6 +61,13 @@ const planSchema = new mongoose.Schema(
   {
     timestamps: true,
     toJSON: {
+      transform(doc: any, ret: any) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+    toObject: {
       transform(doc: any, ret: any) {
         ret.id = ret._id;
         delete ret._id;
