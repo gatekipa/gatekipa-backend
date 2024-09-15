@@ -120,6 +120,7 @@ router.put(
 
         if (dbFeature) {
           featureItem = {
+            featureId: dbFeature._id.toString(),
             name: dbFeature.name,
             code: dbFeature.code,
           };
@@ -131,6 +132,7 @@ router.put(
           features.map((feature) => {
             if (feature._id.toString() === subFeature) {
               subFeatureItems.push({
+                featureId: feature._id.toString(),
                 name: feature.name,
                 code: feature.code,
               });

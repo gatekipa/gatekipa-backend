@@ -4,6 +4,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import { CreatePlanDto } from "../../dto/plan/create-plan.dto";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 import { PlanFeatures } from "../../models/PlanFeatures";
 import { Feature } from "../../models/Feature";
 import { IAssignedFeature } from "../../models/interfaces/assigned-feature.interface";
@@ -101,6 +102,7 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
 
       if (dbFeature) {
         featureItem = {
+          featureId: new mongoose.Types.ObjectId(dbFeature._id).toHexString(),
           name: dbFeature.name,
           code: dbFeature.code,
         };
@@ -112,6 +114,7 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
         features.map((feature) => {
           if (feature._id.toString() === subFeature) {
             subFeatureItems.push({
+              featureId: new mongoose.Types.ObjectId(feature._id).toHexString(),
               name: feature.name,
               code: feature.code,
             });
