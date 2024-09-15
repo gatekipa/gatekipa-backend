@@ -2,6 +2,7 @@ export enum UserType {
   VISITOR = "VISITOR",
   EMPLOYEE = "EMPLOYEE",
   ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
 }
 
 export enum GENDER {

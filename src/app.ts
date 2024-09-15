@@ -52,6 +52,10 @@ import { verifyMobileNoTokenRouter } from "./routes/auth/verify-mobileNo-token";
 import { createPlanRouter } from "./routes/plan/create-plan";
 import { listFeatureRouter } from "./routes/features/list-feature";
 import { updatePlanRouter } from "./routes/plan/update-plan";
+import { listDiscountRouter } from "./routes/discounts/list-discount";
+import { createDiscountRouter } from "./routes/discounts/create-discount";
+import { updateDiscountRouter } from "./routes/discounts/update-discount";
+import { sendDiscountEmailRouter } from "./routes/discounts/send-discount-email";
 
 const dotenv = require("dotenv").config();
 
@@ -125,6 +129,10 @@ app.use(verifyMobileNoTokenRouter);
 app.use(createPlanRouter);
 app.use(listFeatureRouter);
 app.use(updatePlanRouter);
+app.use(listDiscountRouter);
+app.use(createDiscountRouter);
+app.use(updateDiscountRouter);
+app.use(sendDiscountEmailRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");

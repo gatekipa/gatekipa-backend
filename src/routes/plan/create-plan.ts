@@ -140,6 +140,8 @@ router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
       createdBy: new mongoose.Types.ObjectId(appUserId),
     });
 
+    console.log(resolvedAssignedFeatures);
+
     const createdPlan = newPlan.toObject();
 
     const newPlanFeatures = await PlanFeatures.create({
