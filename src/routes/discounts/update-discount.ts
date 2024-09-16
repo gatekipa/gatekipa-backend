@@ -15,8 +15,6 @@ router.put(
   async (req: Request, res: Response) => {
     try {
       const { appUserId } = req?.user;
-      const { discountId } = req.params;
-
       const appUser = await AppUser.findOne({ _id: appUserId });
       if (!appUser) {
         return res
@@ -43,6 +41,8 @@ router.put(
             )
           );
       }
+
+      const { discountId } = req.params;
 
       const body: CreateDiscountDto = req.body;
       const {
@@ -102,7 +102,8 @@ router.put(
           isActive,
           maxNoUsage,
           updatedBy: appUser._id,
-        }
+        },
+        { new: true }
       );
 
       return res

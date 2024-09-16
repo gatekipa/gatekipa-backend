@@ -29,6 +29,10 @@ const discountSchema = new mongoose.Schema(
       required: true,
       type: Number,
     },
+    expiryDate: {
+      required: true,
+      type: Date,
+    },
     isActive: {
       required: true,
       type: Boolean,

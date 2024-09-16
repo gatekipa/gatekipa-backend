@@ -9,12 +9,40 @@ import { PlanFeatures } from "../../models/PlanFeatures";
 import { Feature } from "../../models/Feature";
 import { IAssignedFeature } from "../../models/interfaces/assigned-feature.interface";
 import { IFeatureDto } from "../../dto/plan/feature.dto";
+import { AppUser } from "../../models/AppUser";
+import { UserType } from "../../common/enums";
 
 const router = express.Router();
 
 router.post("/api/plan/", requireAuth, async (req: Request, res: Response) => {
   try {
     const { appUserId } = req?.user;
+    const appUser = await AppUser.findOne({ _id: appUserId });
+    if (!appUser) {
+      return res
+        .status(404)
+        .send(
+          new ApiResponseDto(
+            true,
+            "No user found with provided information",
+            [],
+            404
+          )
+        );
+    }
+
+    if (appUser.userType !== UserType.SUPER_ADMIN) {
+      return res
+        .status(400)
+        .send(
+          new ApiResponseDto(
+            true,
+            "Your user is not authorized to perform this action",
+            [],
+            400
+          )
+        );
+    }
     const body: CreatePlanDto = req.body;
     const {
       name,
