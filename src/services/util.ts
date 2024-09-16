@@ -7,6 +7,15 @@ export function generateRandom6DigitNumber(): string {
   return randomNumber.toString();
 }
 
+export function formatDate(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-GB", options).format(date);
+}
+
 export function getDate15MinsFromNow(): Date {
   const currentDate = new Date();
   const futureDate = new Date(currentDate.getTime() + 15 * 60 * 1000);

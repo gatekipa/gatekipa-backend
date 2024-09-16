@@ -1,171 +1,123 @@
 import express, { Request, Response } from "express";
-import { Company } from "./../../models/Company";
 import { ApiResponseDto } from "../../dto/api-response.dto";
-import { CompanyCounter } from "../../models/CompanyCounter";
 import { AppUser } from "../../models/AppUser";
 import { UserType } from "../../common/enums";
-import { generateStrongPassword } from "../../services/util";
-import { Stripe } from "stripe";
-import { sendEmail } from "../../services/mailer";
-import { COMPANY_LOGIN_DETAIL_TEMPLATE } from "../../services/email-templates";
+import { requireAuth } from "../../middlewares/require-auth.middleware";
+import { DiscountEmailDto } from "../../dto/discount/discount-email.dto";
+import { Discount } from "../../models/Discount";
+import mongoose from "mongoose";
+import { DiscountEmail } from "../../models/DiscountEmail";
 
 const router = express.Router();
 
-// ! We need to defend this route to be only called using our frontend app.
-router.post("/api/company", async (req: Request, res: Response) => {
-  try {
-    const {
-      companyCode,
-      name,
-      ownerFirstName,
-      ownerLastName,
-      emailAddress,
-      mobileNo,
-      address,
-      isEmailVerified,
-    } = req.body;
+router.post(
+  "/api/discount/send-emails",
+  requireAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { appUserId } = req?.user;
 
-    const existingCompany = await Company.findOne({
-      emailAddress,
-      companyCode,
-      mobileNo,
-    });
-
-    if (existingCompany) {
-      return res
-        .status(400)
-        .send(new ApiResponseDto(true, "Company already exists", [], 400));
-    }
-
-    // * Check for existing user for this company.
-    const existingUser = await AppUser.findOne({ emailAddress });
-    if (existingUser) {
-      return res
-        .status(400)
-        .send(
-          new ApiResponseDto(
-            true,
-            "User with email address already exists",
-            [],
-            400
-          )
-        );
-    }
-
-    // * Generating stripe customer ID
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2024-06-20",
-    });
-
-    if (!stripe) {
-      return res
-        .status(400)
-        .send(new ApiResponseDto(true, "Stripe connection failed", [], 400));
-    }
-
-    let stripeCustomerId = null;
-
-    const existingStripeCustomer = await stripe.customers.list({
-      email: emailAddress,
-    });
-
-    if (existingStripeCustomer && existingStripeCustomer.data.length > 0) {
-      stripeCustomerId = existingStripeCustomer.data[0].id;
-    } else {
-      const stripeCustomer = await stripe.customers.create({
-        email: emailAddress,
-        name: `${ownerFirstName} ${ownerLastName}`,
-        description: `${name}`,
-        phone: mobileNo,
-      });
-
-      if (!stripeCustomer) {
+      const appUser = await AppUser.findOne({ _id: appUserId });
+      if (!appUser) {
         return res
-          .status(400)
+          .status(404)
           .send(
-            new ApiResponseDto(true, "Stripe customer creation failed", [], 400)
+            new ApiResponseDto(
+              true,
+              "No user found with provided information",
+              [],
+              404
+            )
           );
       }
 
-      stripeCustomerId = stripeCustomer.id;
+      if (appUser.userType !== UserType.SUPER_ADMIN) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Your user is not authorized to perform this action",
+              [],
+              400
+            )
+          );
+      }
+
+      const body: DiscountEmailDto = req.body;
+      const { emailAddress, discountId } = body;
+
+      if (!discountId) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Please provide discount information",
+              [],
+              400
+            )
+          );
+      }
+
+      const discount = await Discount.findOne({
+        _id: new mongoose.Types.ObjectId(discountId),
+        isActive: true,
+        expiryDate: { $gte: new Date() },
+      });
+
+      if (!discount) {
+        return res
+          .status(404)
+          .send(
+            new ApiResponseDto(
+              true,
+              "No valid and active discount found with provided information",
+              [],
+              404
+            )
+          );
+      }
+
+      const discountEmailsDocuments = emailAddress.map((email) => ({
+        emailAddress: email,
+        discount: discount._id,
+        isEmailSent: false,
+        emailSentDate: null,
+      }));
+
+      if (discountEmailsDocuments.length === 0) {
+        return res
+          .status(400)
+          .send(new ApiResponseDto(true, "No email address provided", [], 400));
+      }
+
+      await DiscountEmail.insertMany(discountEmailsDocuments);
+
+      return res
+        .status(201)
+        .send(
+          new ApiResponseDto(
+            false,
+            "Discount emails dispatched successfully",
+            [],
+            200
+          )
+        );
+    } catch (error) {
+      console.error("Error occurred during sending discount emails", error);
+      return res
+        .status(500)
+        .send(
+          new ApiResponseDto(
+            true,
+            "Something wen't wrong while sending discount emails",
+            [],
+            500
+          )
+        );
     }
-
-    const newCompany = await Company.create({
-      companyCode,
-      name,
-      emailAddress,
-      ownerFirstName,
-      ownerLastName,
-      mobileNo,
-      address,
-      isSubscriptionActive: false,
-      lastPaymentDate: null,
-      nextPaymentDate: null,
-      stripeCustomerId,
-      plan: null,
-    });
-
-    await CompanyCounter.create({
-      companyId: newCompany.id,
-      seq: 10000,
-    });
-
-    const passwordData = await generateStrongPassword(8);
-    const autoGeneratedStrongPass = passwordData.passwordString;
-
-    await AppUser.create({
-      companyId: newCompany.id,
-      emailAddress,
-      employeeId: null,
-      firstName: ownerFirstName,
-      lastName: ownerLastName,
-      isActive: true,
-      isLoggedIn: false,
-      mobileNo,
-      userType: UserType.ADMIN,
-      visitorId: null,
-      password: passwordData.hashedPassword,
-      isEmailVerified,
-    });
-
-    // * Sending email to user with login details
-    const emailHtmlContent = COMPANY_LOGIN_DETAIL_TEMPLATE.replace(
-      "{{companyName}}",
-      name
-    )
-      .replace("{{companyEmail}}", emailAddress)
-      .replace("{{password}}", autoGeneratedStrongPass)
-      .replace("{{loginURL}}", process.env.LOGIN_URL);
-
-    await sendEmail(
-      emailAddress,
-      `Successful Company Registration`,
-      emailHtmlContent
-    );
-
-    return res
-      .status(200)
-      .send(
-        new ApiResponseDto(
-          false,
-          "Company created successfully",
-          newCompany,
-          200
-        )
-      );
-  } catch (error) {
-    console.error("Error occurred during creating-company", error);
-    return res
-      .status(500)
-      .send(
-        new ApiResponseDto(
-          true,
-          "Something wen't wrong while creating company",
-          [],
-          500
-        )
-      );
   }
-});
+);
 
 export { router as sendDiscountEmailRouter };

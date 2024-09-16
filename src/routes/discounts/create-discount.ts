@@ -81,13 +81,13 @@ router.post(
       });
 
       return res
-        .status(200)
+        .status(201)
         .send(
           new ApiResponseDto(
             false,
             "Discount created successfully",
             newDiscount,
-            200
+            201
           )
         );
     } catch (error) {

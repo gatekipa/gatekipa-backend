@@ -134,3 +134,50 @@ export const MULTIFACTOR_AUTH_CODE_EMAIL_TEMPLATE = `<div style="font-family: Ar
         </tr>
     </table>
 </div>`;
+
+export const DISCOUNT_EMAILS_TEMPLATE = `<div style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f9f9f9; padding: 20px;">
+    <tr>
+      <td>
+        <table width="600px" cellpadding="0" cellspacing="0" border="0" align="center" style="background-color: #ffffff; padding: 20px; border: 1px solid #dddddd;">
+          <tr>
+            <td style="padding: 10px 0; text-align: center;">
+              <h1 style="color: #333333; font-size: 24px; margin: 0;">GateKipa offers you special discount!</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 0;">
+              <p style="color: #555555; font-size: 16px; line-height: 24px; margin: 0;">
+                Dear <strong style="color: #333333;">{{OWNER_NAME}}</strong>,
+              </p>
+              <p style="color: #555555; font-size: 16px; line-height: 24px;">
+                We are pleased to inform you that a special discount has been issued for your company <strong style="color: #333333;">{{COMPANY_NAME}}</strong>.
+              </p>
+              <p style="color: #555555; font-size: 16px; line-height: 24px;">
+                Use the code: <strong style="color: #333333;">{{DISCOUNT_CODE}}</strong> to avail <strong style="color: #333333;">{{DISCOUNT_TYPE_TEXT}}</strong> discount on your next invoice.
+              </p>
+              <p style="color: #555555; font-size: 16px; line-height: 24px;">
+                This discount is valid until <strong style="color: #333333;">{{EXPIRY_DATE}}</strong>, so don’t miss out on this opportunity to save!
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 0; text-align: center;">
+              <a href="{{GATE_KIPA_URL}}" style="color: #ffffff; background-color: #4CAF50; padding: 12px 25px; text-decoration: none; font-size: 16px; border-radius: 5px;">Visit Our Website</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 20px 0; border-top: 1px solid #dddddd;">
+              <p style="color: #999999; font-size: 12px; text-align: center; margin: 0;">
+                If you have any questions or need assistance, feel free to contact us at <a href="mailto:{{GATE_KIPA_EMAIL}}" style="color: #4CAF50; text-decoration: none;">{{GATE_KIPA_EMAIL}}</a>.
+              </p>
+              <p style="color: #999999; font-size: 12px; text-align: center; margin: 0;">
+                ©${new Date().getFullYear()} GateKipa, All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  </div>`;
