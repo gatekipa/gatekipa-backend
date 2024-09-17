@@ -6,6 +6,9 @@ import { Company } from "../../models/Company";
 import { Payment } from "../../models/Payment";
 import { Invoice } from "../../models/Invoice";
 import { CompanyPlanSubscription } from "../../models/CompanyPlanSubscription";
+import { ConfirmPaymentDto } from "../../dto/payment/confirm-payment.dto";
+import { CompanyAvailedDiscount } from "../../models/CompanyAvailedDiscount";
+import { Discount } from "../../models/Discount";
 
 const router = express.Router();
 
@@ -40,14 +43,53 @@ router.post(
           );
       }
 
-      const { planId, actualAmount, payableAmount, stripePayment } = req.body;
+      const body: ConfirmPaymentDto = req.body;
+      const {
+        planId,
+        discountedAmount,
+        payableAmount,
+        appliedDiscountId,
+        stripePayment,
+      } = body;
+
+      if (appliedDiscountId && appliedDiscountId.length > 0) {
+        const discount = await Discount.findOne({
+          _id: new mongoose.Types.ObjectId(appliedDiscountId),
+        });
+
+        if (!discount) {
+          return res
+            .status(404)
+            .send(
+              new ApiResponseDto(
+                true,
+                "No discount found with provided information",
+                [],
+                404
+              )
+            );
+        }
+
+        await Discount.findByIdAndUpdate(discount._id, {
+          maxNoUsage: discount.maxNoUsage - 1,
+        });
+
+        await CompanyAvailedDiscount.create({
+          company: company._id,
+          discount: new mongoose.Types.ObjectId(appliedDiscountId),
+        });
+      }
 
       // * Create a payment entry
       const payment = await Payment.create({
         amount: payableAmount,
         company: company._id,
-        discount: null,
         stripePaymentIntent: stripePayment,
+        discountedAmount: discountedAmount,
+        discount:
+          appliedDiscountId && appliedDiscountId.length > 0
+            ? new mongoose.Types.ObjectId(appliedDiscountId)
+            : null,
       });
 
       // * Check for existing invoice with UNPAID OR OVERDUE status else generate an invoice for the payment made

@@ -2,7 +2,8 @@ import mongoose, { ObjectId } from "mongoose";
 
 interface IPayment {
   amount: number;
-  discount: number;
+  discount: ObjectId;
+  discountedAmount: number;
   stripePaymentIntent: Object;
   company: ObjectId;
 }
@@ -14,8 +15,13 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
     discount: {
-      type: Number,
       required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "discounts",
+    },
+    discountedAmount: {
+      type: Number,
+      required: true,
     },
     stripePaymentIntent: {
       type: Object,
