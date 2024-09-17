@@ -12,6 +12,9 @@ import { UserTempToken } from "../../models/UserTempToken";
 import { DomainType, EventType } from "../../common/enums";
 import { MULTIFACTOR_AUTH_CODE_EMAIL_TEMPLATE } from "../../services/email-templates";
 import { sendSMS } from "../../services/twilio-messaging";
+import { PlanFeatures } from "../../models/PlanFeatures";
+import mongoose from "mongoose";
+import { Company } from "../../models/Company";
 
 const router = express.Router();
 
@@ -19,13 +22,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
   try {
     const { emailAddress, password } = req.body;
 
-    const existingUser = await AppUser.findOne({ emailAddress }).populate({
-      path: "companyId",
-      populate: {
-        path: "plan",
-        select: "_id planName",
-      },
-    });
+    const existingUser = await AppUser.findOne({ emailAddress });
 
     if (!existingUser) {
       return res
@@ -47,6 +44,19 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
           new ApiResponseDto(true, `User has been marked inactive`, [], 400)
         );
     }
+
+    const company = await Company.findOne({
+      _id: new mongoose.Types.ObjectId(existingUser.companyId),
+    }).populate({
+      path: "plan",
+      select: "_id planName",
+    });
+
+    const planFeatures = await PlanFeatures.findOne({
+      plan: company.plan,
+    }).populate({ path: "plan", select: "_id planName" });
+
+    console.log(planFeatures);
 
     const isPasswordCorrect = await Password.compare(
       existingUser?.password,
@@ -131,7 +141,7 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
         fullName: `${existingUser?.firstName} ${existingUser?.lastName}`,
         emailAddress,
         userType: existingUser?.userType,
-        companyId: existingUser?.companyId,
+        companyId: company,
         appUserId: existingUser?._id,
       },
       process.env.JWT_KEY
@@ -156,8 +166,9 @@ router.post("/api/users/signin", async (req: Request, res: Response) => {
           lastName: existingUser?.lastName,
           userType: existingUser?.userType,
           visitorId: existingUser?.visitorId,
-          companyId: existingUser?.companyId,
-          planInfo: existingUser?.companyId,
+          companyId: company,
+          planInfo: company,
+          plan: planFeatures,
           employeeId: existingUser?.employeeId,
           isMultiFactorAuthEnabled: existingUser?.isMultiFactorAuthEnabled,
           multiFactorAuthMediums: existingUser?.multiFactorAuthMediums,

@@ -57,6 +57,7 @@ import { createDiscountRouter } from "./routes/discounts/create-discount";
 import { updateDiscountRouter } from "./routes/discounts/update-discount";
 import { sendDiscountEmailRouter } from "./routes/discounts/send-discount-email";
 import { discountEmailSenderRouter } from "./routes/cron-jobs/discount-email-sender";
+import { applyDiscountRouter } from "./routes/discounts/apply-discount";
 
 const dotenv = require("dotenv").config();
 
@@ -135,6 +136,7 @@ app.use(createDiscountRouter);
 app.use(updateDiscountRouter);
 app.use(sendDiscountEmailRouter);
 app.use(discountEmailSenderRouter);
+app.use(applyDiscountRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");
