@@ -9,6 +9,7 @@ import { CompanyPlanSubscription } from "../../models/CompanyPlanSubscription";
 import { ConfirmPaymentDto } from "../../dto/payment/confirm-payment.dto";
 import { CompanyAvailedDiscount } from "../../models/CompanyAvailedDiscount";
 import { Discount } from "../../models/Discount";
+import { Plan } from "../../models/Plan";
 
 const router = express.Router();
 
@@ -105,6 +106,34 @@ router.post(
           company: company._id,
           discount: new mongoose.Types.ObjectId(appliedDiscountId),
         });
+      }
+
+      const plan = await Plan.findById(new mongoose.Types.ObjectId(planId));
+
+      if (!plan) {
+        return res
+          .status(404)
+          .send(
+            new ApiResponseDto(
+              true,
+              "No Plan exists with provided information",
+              [],
+              404
+            )
+          );
+      }
+
+      if (!plan.isPromotionalPlan && noOfMonths > 0) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Only promotional plans can have multiple month payments",
+              [],
+              400
+            )
+          );
       }
 
       // * Create a payment entry
