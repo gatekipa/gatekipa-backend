@@ -3,7 +3,7 @@ export class ApiResponseDto {
     isError: Boolean,
     message: String,
     data: any,
-    responseCode: Number
+    responseCode: number
   ) {
     this.data = data;
     this.isError = isError;
@@ -14,5 +14,5 @@ export class ApiResponseDto {
   isError: Boolean;
   message: String;
   data: any;
-  responseCode: Number;
+  responseCode: number;
 }

@@ -43,8 +43,6 @@ router.get(
       const { mobileNo, emailAddress, firstName, lastName, isActive } =
         req.query;
 
-      console.log("isActive", isActive);
-
       const filter: any = { companyId };
 
       filter.companyId = new Types.ObjectId(companyId);
