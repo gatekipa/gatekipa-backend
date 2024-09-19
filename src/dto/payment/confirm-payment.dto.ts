@@ -4,4 +4,5 @@ export class ConfirmPaymentDto {
   payableAmount: number;
   stripePayment: any;
   appliedDiscountId?: string;
+  noOfMonths: number;
 }

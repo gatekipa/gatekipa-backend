@@ -50,7 +50,34 @@ router.post(
         payableAmount,
         appliedDiscountId,
         stripePayment,
+        noOfMonths,
       } = body;
+
+      if (payableAmount <= 0) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Payable amount cannot be less than or equal to zero",
+              [],
+              400
+            )
+          );
+      }
+
+      if (noOfMonths < 0 || noOfMonths > 12) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Number of months cannot be negative or greater than 12",
+              [],
+              400
+            )
+          );
+      }
 
       if (appliedDiscountId && appliedDiscountId.length > 0) {
         const discount = await Discount.findOne({
@@ -109,6 +136,7 @@ router.post(
         await Invoice.create({
           amount: payableAmount,
           company: company._id,
+          discountedAmount,
           invoiceDate: new Date(),
           invoiceNo: "INV-" + Date.now(),
           invoiceStatus: "PAID",
@@ -126,9 +154,10 @@ router.post(
 
       // * Update the company's plan and subscription status
       const today = new Date();
+      const monthOffset = noOfMonths === 0 ? 1 : noOfMonths;
       const nextPaymentDate = new Date(
         today.getFullYear(),
-        today.getMonth() + 1,
+        today.getMonth() + monthOffset,
         today.getDate()
       );
       const updatedCompany = await Company.findByIdAndUpdate(

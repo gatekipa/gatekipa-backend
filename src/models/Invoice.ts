@@ -3,6 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 interface IInvoice {
   invoiceNo: string;
   amount: number;
+  discountedAmount: number;
   invoiceStatus: "UNPAID" | "PAID" | "CANCELLED" | "OVERDUE";
   payment?: ObjectId;
   company: ObjectId;
@@ -21,6 +22,10 @@ const invoiceSchema = new mongoose.Schema(
     },
     invoiceStatus: {
       type: String,
+      required: true,
+    },
+    discountedAmount: {
+      type: Number,
       required: true,
     },
     payment: {
