@@ -52,6 +52,51 @@ router.post(
         maxNoUsage,
       } = body;
 
+      if (!code || code.trim().length === 0) {
+        return res
+          .status(400)
+          .send(new ApiResponseDto(true, `Code is required`, [], 400));
+      }
+
+      if (!discountValue || discountValue === 0) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              `Discount value should be greater than zero`,
+              [],
+              400
+            )
+          );
+      }
+
+      if (!maxNoUsage || maxNoUsage === 0) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              `Max no usage value should be greater than zero`,
+              [],
+              400
+            )
+          );
+      }
+
+      if (!expiryDate || expiryDate <= new Date()) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              `Expiry date should be greater than today's date`,
+              [],
+              400
+            )
+          );
+      }
+
       const existingDiscount = await Discount.findOne({
         code,
         isActive: true,
