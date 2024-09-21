@@ -183,7 +183,16 @@ router.post(
 
       // * Update the company's plan and subscription status
       const today = new Date();
-      const monthOffset = noOfMonths === 0 ? 1 : noOfMonths;
+      let monthOffset = 1;
+      if (plan.isPromotionalPlan) {
+        monthOffset = noOfMonths === 0 ? 1 : noOfMonths;
+      } else if (
+        !plan.isPromotionalPlan &&
+        plan.subscriptionType === "YEARLY"
+      ) {
+        monthOffset = 12;
+      }
+
       const nextPaymentDate = new Date(
         today.getFullYear(),
         today.getMonth() + monthOffset,

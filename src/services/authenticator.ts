@@ -31,6 +31,7 @@ export class AuthenticatorService {
           [],
           400
         );
+        return new AuthResponseDto(response, token);
       }
 
       // * Check if user is InActive then return error.
@@ -41,18 +42,25 @@ export class AuthenticatorService {
           [],
           400
         );
+        return new AuthResponseDto(response, token);
       }
 
       // * Check if user type is SuperAdmin
       if (existingUser.userType === UserType.SUPER_ADMIN) {
+        const isPasswordCorrect = await this.isPasswordCorrect(
+          existingUser.password,
+          password
+        );
+
         // * If Incorrect password then return error.
-        if (!(await this.isPasswordCorrect(existingUser.password, password))) {
+        if (!isPasswordCorrect) {
           response = new ApiResponseDto(
             true,
             `Incorrect Password provided`,
             [],
             400
           );
+          return new AuthResponseDto(response, token);
         }
 
         // * If Multi-Factor Authentication is enabled
@@ -68,14 +76,20 @@ export class AuthenticatorService {
         response = this.getSuperUserSuccessResponse(existingUser);
         return new AuthResponseDto(response, token);
       } else {
+        const isPasswordCorrect = await this.isPasswordCorrect(
+          existingUser.password,
+          password
+        );
+
         // * If Incorrect password then return error.
-        if (!(await this.isPasswordCorrect(existingUser.password, password))) {
+        if (!isPasswordCorrect) {
           response = new ApiResponseDto(
             true,
             `Incorrect Password provided`,
             [],
             400
           );
+          return new AuthResponseDto(response, token);
         }
 
         // * If Multi-Factor Authentication is enabled
