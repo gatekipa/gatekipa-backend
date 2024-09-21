@@ -123,19 +123,6 @@ router.post(
           );
       }
 
-      if (!plan.isPromotionalPlan && noOfMonths > 0) {
-        return res
-          .status(400)
-          .send(
-            new ApiResponseDto(
-              true,
-              "Only promotional plans can have multiple month payments",
-              [],
-              400
-            )
-          );
-      }
-
       // * Create a payment entry
       const payment = await Payment.create({
         amount: payableAmount,
