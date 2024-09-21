@@ -24,7 +24,7 @@ router.post("/api/users/verify-email", async (req: Request, res: Response) => {
           .send(
             new ApiResponseDto(
               true,
-              `User already exist with provided email: ${emailAddress}`,
+              `You already have an account with ${emailAddress} email address. Please login to continue.`,
               [],
               400
             )
