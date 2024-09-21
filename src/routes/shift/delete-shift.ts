@@ -4,13 +4,11 @@ import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { Shift } from "../../models/Shift";
 
 const router = express.Router();
-router.put(
+router.delete(
   "/api/shift/:id",
   requireAuth,
   async (req: Request, res: Response) => {
     try {
-      const { isActive, name, startTime, endTime } = req.body;
-
       const existingShift = await Shift.findById(req.params.id);
 
       if (!existingShift) {
@@ -26,12 +24,7 @@ router.put(
           );
       }
 
-      existingShift.isActive = isActive;
-      existingShift.name = name;
-      existingShift.startTime = startTime;
-      existingShift.endTime = endTime;
-
-      const updatedShift = await existingShift.save();
+      const deletedShift = await Shift.deleteOne({ _id: req.params.id });
 
       return res
         .status(200)
@@ -39,7 +32,7 @@ router.put(
           new ApiResponseDto(
             false,
             "Plan updated successfully",
-            updatedShift,
+            deletedShift,
             200
           )
         );
@@ -59,4 +52,4 @@ router.put(
   }
 );
 
-export { router as editShiftRouter };
+export { router as deleteShiftRouter };
