@@ -20,7 +20,7 @@ router.put(
             new ApiResponseDto(
               true,
               "No shift found with provided information",
-              [],
+              {},
               404
             )
           );
