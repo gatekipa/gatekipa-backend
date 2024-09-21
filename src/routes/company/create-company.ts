@@ -126,6 +126,8 @@ router.post("/api/company", async (req: Request, res: Response) => {
       visitorId: null,
       password: passwordData.hashedPassword,
       isEmailVerified,
+      isMultiFactorAuthEnabled: false,
+      multiFactorAuthMediums: [],
     });
 
     // * Sending email to user with login details
