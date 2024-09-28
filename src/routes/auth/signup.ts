@@ -47,7 +47,9 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       return res.status(400).send(response);
     }
 
-    if (existingUser.mobileNo === mobileNo) {
+    const existingUseWithMobileNo = await AppUser.findOne({ mobileNo });
+
+    if (existingUseWithMobileNo) {
       const response = new ApiResponseDto(
         true,
         `User already exists with mobile no: ${mobileNo}`,
@@ -64,11 +66,11 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       if (existingEmployee && existingEmployee.length === 0) {
         const response = new ApiResponseDto(
           true,
-          `No employee profile found for selected company and email address`,
+          `No employee profile found. Please contact your company to create your employee profile.`,
           [],
-          404
+          400
         );
-        return res.status(404).send(response);
+        return res.status(400).send(response);
       } else {
         // * Create a new user for employee
         newUser = await AppUser.create({
@@ -94,9 +96,12 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
         });
       }
     } else if (userType === UserType.VISITOR) {
-      const existingVisitor = await Visitor.find({ emailAddress, companyId });
-      if (existingVisitor && existingVisitor.length === 0) {
-        console.log("existingVisitor", existingVisitor);
+      const existingVisitor = await Visitor.findOne({
+        emailAddress,
+        mobileNo,
+        companyId,
+      });
+      if (!existingVisitor) {
         // * Create a new user for visitor
         newUser = await AppUser.create({
           emailAddress,
@@ -140,7 +145,7 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
           lastName,
           mobileNo,
           companyId,
-          visitorId: existingVisitor[0]._id,
+          visitorId: existingVisitor._id,
           employeeId: null,
           isEmailVerified,
           isMultiFactorAuthEnabled: false,
