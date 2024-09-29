@@ -11,7 +11,6 @@ import { COMPANY_LOGIN_DETAIL_TEMPLATE } from "../../services/email-templates";
 
 const router = express.Router();
 
-// ! We need to defend this route to be only called using our frontend app.
 router.post("/api/company", async (req: Request, res: Response) => {
   try {
     const {

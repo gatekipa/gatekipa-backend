@@ -40,7 +40,12 @@ router.post("/api/users/verify-email", async (req: Request, res: Response) => {
     });
 
     if (existingToken) {
-      newToken = existingToken.token;
+      // * If token already exists, update it.
+      newToken = generateRandom6DigitNumber();
+      await UserTempToken.updateOne(
+        { _id: existingToken._id },
+        { token: newToken }
+      );
     } else {
       newToken = generateRandom6DigitNumber();
     }

@@ -20,6 +20,8 @@ router.post(
         domainType: DomainType.EMAIL,
       });
 
+      console.log(userTempToken);
+
       if (!userTempToken) {
         return res
           .status(400)

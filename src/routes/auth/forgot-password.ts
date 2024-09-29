@@ -36,16 +36,22 @@ router.post(
       const expiryDate = new Date();
       expiryDate.setHours(new Date().getHours() + 1);
 
-      console.log("newToken :>> ", newToken);
-
-      await UserTempToken.create({
-        domain: emailAddress,
-        eventType: EventType.FORGOT_PASSWORD,
-        expiryDate,
-        isVerified: false,
-        token: newToken,
-        domainType: DomainType.EMAIL,
-      });
+      // * If token already exists, update token and expiryDate
+      await UserTempToken.findOneAndUpdate(
+        {
+          domain: emailAddress,
+          domainType: DomainType.EMAIL,
+          isVerified: false,
+          eventType: EventType.FORGOT_PASSWORD,
+        },
+        {
+          token: newToken,
+          expiryDate,
+        },
+        {
+          upsert: true,
+        }
+      );
 
       await sendEmail(
         emailAddress,

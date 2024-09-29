@@ -41,7 +41,15 @@ router.post(
       });
 
       if (existingToken) {
-        newToken = existingToken.token;
+        newToken = generateRandom6DigitNumber();
+        await UserTempToken.updateOne(
+          {
+            _id: existingToken._id,
+          },
+          {
+            token: newToken,
+          }
+        );
       } else {
         newToken = generateRandom6DigitNumber();
       }
