@@ -61,6 +61,7 @@ import { applyDiscountRouter } from "./routes/discounts/apply-discount";
 import { verifyMFATokenRouter } from "./routes/auth/verify-mfa-token";
 import { editShiftRouter } from "./routes/shift/edit-shift";
 import { deleteShiftRouter } from "./routes/shift/delete-shift";
+import { testRouter } from "./routes/tester/test-route";
 
 const dotenv = require("dotenv").config();
 
@@ -143,6 +144,7 @@ app.use(applyDiscountRouter);
 app.use(verifyMFATokenRouter);
 app.use(editShiftRouter);
 app.use(deleteShiftRouter);
+process.env.NODE_ENV === "development" && app.use(testRouter);
 
 app.use("/", (req, res) => {
   res.send("GateKipa Backend API");
