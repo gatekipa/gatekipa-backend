@@ -2,6 +2,7 @@ import { ApiResponseDto } from "../../dto/api-response.dto";
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares/require-auth.middleware";
 import { Visitor } from "../../models/Visitor";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -40,19 +41,20 @@ router.post(
         lastName,
         emailAddress,
         mobileNo,
-        companyId,
+        companyId: new mongoose.Types.ObjectId(companyId),
         isActive: true,
       });
 
-      return res.status(200).send(
-        new ApiResponseDto(
-          false,
-          "Visitor created successfully",
-          // { visitorId: newVisitor._id, emailAddress },
-          newVisitor,
-          201
-        )
-      );
+      return res
+        .status(200)
+        .send(
+          new ApiResponseDto(
+            false,
+            "Visitor created successfully",
+            newVisitor,
+            201
+          )
+        );
     } catch (error) {
       console.error("Error occurred during create-visitor", error);
       return res

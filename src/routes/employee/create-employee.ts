@@ -86,7 +86,12 @@ router.post(
           );
       }
 
-      if (existingUser.mobileNo === mobileNo) {
+      const existingUserByMobileNo = await Employee.findOne({
+        mobileNo,
+        companyId: new Types.ObjectId(companyId),
+      });
+
+      if (existingUserByMobileNo) {
         return res
           .status(400)
           .send(
@@ -101,11 +106,11 @@ router.post(
 
       const newEmployeeNo = await generateEmployeeNo(companyId, employeeNo);
 
-      const avatar = await uploadToImageKit(
-        req.file.buffer,
-        req.file.originalname
-      );
-      console.log("avatar :>> ", avatar);
+      let avatar = null;
+      if (req.file) {
+        avatar = await uploadToImageKit(req.file.buffer, req.file.originalname);
+        console.debug("avatar :>> ", avatar);
+      }
 
       const newEmployee = await Employee.create({
         emailAddress,
