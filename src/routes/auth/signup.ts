@@ -6,6 +6,7 @@ import { UserType } from "../../common/enums";
 import jwt from "jsonwebtoken";
 import { Employee } from "../../models/Employee";
 import { Visitor } from "../../models/Visitor";
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.post("/api/users/signup", async (req: Request, res: Response) => {
@@ -47,9 +48,9 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       return res.status(400).send(response);
     }
 
-    const existingUseWithMobileNo = await AppUser.findOne({ mobileNo });
+    const existingUserWithMobileNo = await AppUser.findOne({ mobileNo });
 
-    if (existingUseWithMobileNo) {
+    if (existingUserWithMobileNo) {
       const response = new ApiResponseDto(
         true,
         `User already exists with mobile no: ${mobileNo}`,
@@ -97,10 +98,13 @@ router.post("/api/users/signup", async (req: Request, res: Response) => {
       }
     } else if (userType === UserType.VISITOR) {
       const existingVisitor = await Visitor.findOne({
-        emailAddress,
-        mobileNo,
-        companyId,
+        companyId: new mongoose.Types.ObjectId(companyId), // Ensure the visitor is in the same company
+        $or: [
+          { emailAddress }, // Match email
+          { mobileNo }, // Or match mobile number
+        ],
       });
+
       if (!existingVisitor) {
         // * Create a new user for visitor
         newUser = await AppUser.create({

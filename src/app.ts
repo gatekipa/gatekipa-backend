@@ -61,6 +61,9 @@ import { applyDiscountRouter } from "./routes/discounts/apply-discount";
 import { verifyMFATokenRouter } from "./routes/auth/verify-mfa-token";
 import { editShiftRouter } from "./routes/shift/edit-shift";
 import { deleteShiftRouter } from "./routes/shift/delete-shift";
+import { listCheckedInVisitorRouter } from "./routes/reception/visitor/list-checked-in-visitors";
+import { checkInExistingVisitorRouter } from "./routes/reception/visitor/check-in-existing-visitor";
+import { createAndCheckInExistingVisitorRouter } from "./routes/reception/visitor/create-check-in-visitor";
 import { testRouter } from "./routes/tester/test-route";
 
 const dotenv = require("dotenv").config();
@@ -144,6 +147,9 @@ app.use(applyDiscountRouter);
 app.use(verifyMFATokenRouter);
 app.use(editShiftRouter);
 app.use(deleteShiftRouter);
+app.use(listCheckedInVisitorRouter);
+app.use(checkInExistingVisitorRouter);
+app.use(createAndCheckInExistingVisitorRouter);
 process.env.NODE_ENV === "development" && app.use(testRouter);
 
 app.use("/", (req, res) => {

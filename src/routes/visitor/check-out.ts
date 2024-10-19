@@ -13,6 +13,8 @@ router.post(
       const { appUserId } = req?.user;
       const { visitId } = req.params;
 
+      const { comments } = req.body;
+
       if (!visitId) {
         return res
           .status(400)
@@ -57,6 +59,7 @@ router.post(
       await Visits.findByIdAndUpdate(visitId, {
         checkoutTime: new Date(),
         updatedBy: appUserId,
+        comments: comments ?? null,
       });
 
       return res

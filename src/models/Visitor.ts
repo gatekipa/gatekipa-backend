@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface IVisitor {
   firstName: string;
   lastName: string;
-  emailAddress: string;
+  emailAddress?: string;
   mobileNo: string;
   isActive: boolean;
   companyId: string;
@@ -14,7 +14,7 @@ const visitorSchema = new mongoose.Schema(
   {
     emailAddress: {
       type: String,
-      required: true,
+      required: false,
     },
     firstName: {
       type: String,

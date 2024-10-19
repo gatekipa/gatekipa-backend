@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 interface IVisits {
   visitor: string;
   purposeOfVisit: string;
+  comments: string;
   employee?: string;
   checkInTime?: Date;
   checkoutTime?: Date;
@@ -35,6 +36,10 @@ const visitSchema = new mongoose.Schema(
     },
     checkoutTime: {
       type: Date,
+      required: false,
+    },
+    comments: {
+      type: String,
       required: false,
     },
     createdBy: {
