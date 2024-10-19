@@ -35,6 +35,19 @@ router.post(
           );
       }
 
+      if (!visit.checkInTime || visit.checkInTime === null) {
+        return res
+          .status(400)
+          .send(
+            new ApiResponseDto(
+              true,
+              "Please check-in first before checkout",
+              [],
+              400
+            )
+          );
+      }
+
       if (visit.checkoutTime) {
         return res
           .status(400)
