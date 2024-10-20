@@ -68,6 +68,7 @@ router.post(
       const visit = await Visits.create({
         checkInTime,
         checkoutTime: null,
+        visitDate: checkInTime,
         comments: null,
         createdBy: new mongoose.Types.ObjectId(appUserId),
         employee: new mongoose.Types.ObjectId(employeeId),

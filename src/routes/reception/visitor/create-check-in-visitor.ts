@@ -62,6 +62,7 @@ router.post(
         checkInTime,
         checkoutTime: null,
         comments: null,
+        visitDate: checkInTime,
         createdBy: new mongoose.Types.ObjectId(appUserId),
         employee: new mongoose.Types.ObjectId(employeeId),
         purposeOfVisit,
