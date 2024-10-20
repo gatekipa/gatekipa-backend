@@ -18,6 +18,7 @@ router.get(
           { checkInTime: { $ne: null } },
           { checkInTime: { $lte: today } }, // up to the current time
           { checkInTime: { $gte: yesterday } }, // from 24 hours ago
+          { checkoutTime: { $eq: null } },
         ],
       })
         .populate([

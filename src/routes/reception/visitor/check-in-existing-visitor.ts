@@ -57,7 +57,7 @@ router.post(
           .send(
             new ApiResponseDto(
               true,
-              `You alread have a checked in visit within 24 hours. Please checkout first`,
+              `You already have a checked in visit within 24 hours. Please checkout first`,
               [],
               400
             )
